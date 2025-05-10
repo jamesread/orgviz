@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: install coverage
-        run: sudo apt-get install python3-coverage python3-pytest python3-configargparse pylint3
+        run: sudo apt-get install python3-coverage python3-pytest python3-configargparse pylint
 
       - name: make tests
         run: make tests-debian
