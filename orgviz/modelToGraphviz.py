@@ -108,7 +108,6 @@ class ModelToGraphVizConverter():
 
         return out
 
-    # pylint: disable=no-self-use
     # ^^ Is logically part of this class still.
     def getEdgeDotStyle(self, edge):
         if edge['type'] == "supports":
@@ -116,7 +115,6 @@ class ModelToGraphVizConverter():
 
         return ""
 
-    # pylint: disable=no-self-use
     # ^^ Is logically part of this class still.
     def getStyleForDmu(self, dmu):
         return {
@@ -127,7 +125,6 @@ class ModelToGraphVizConverter():
             "U": "gray"
         }.get(dmu, "white")
 
-    # pylint: disable=no-self-use
     # ^^ Is logically part of this class still.
     def getStyleForSentiment(self, sentiment):
         return {
@@ -139,18 +136,14 @@ class ModelToGraphVizConverter():
     # pylint: disable=too-many-function-args
     # ^^ seems bogus here
     def getDsVisType(self, person):
-        ret = '<tr><td bgcolor = "%s" border = "1">%s</td><td bgcolor = "%s" border = "1">%s</td></tr>' % (
-            self.getStyleForDmu(person.dmu),
-            person.getDmuDescription(), 
-            self.getStyleForSentiment(person.sentiment),
-            person.getSentimentDescription()
-        )
+        ret = f'<tr><td bgcolor = "{self.getStyleForDmu(person.dmu)}" border = "1">{person.getDmuDescription()}</td><td bgcolor = "{self.getStyleForSentiment(person.sentiment)}" border = "1">{person.getSentimentDescription()}</td></tr>'
+
         return ret
 
     def getPersonLabelAsDot(self, person):
         ret = '<<table border = "0" cellspacing = "0">'
-        ret += '<tr><td border = "1" colspan = "2"><b>%s</b></td></tr>' % person.fullName
-        ret += '<tr><td border = "1" colspan = "2"><font point-size = "9">%s</font></td></tr>' % person.getAttribute("title")
+        ret += f'<tr><td border = "1" colspan = "2"><b>{person.fullName}</b></td></tr>'
+        ret += f'<tr><td border = "1" colspan = "2"><font point-size = "9">{person.getAttribute("title")}</font></td></tr>'
 
         if self.opts.profilePictures:
             pic = self.opts.profilePictureDirectory + person.fullName + ".jpeg"
@@ -158,7 +151,7 @@ class ModelToGraphVizConverter():
             if os.path.exists(pic):
                 logging.debug("Found LinkedIn profile: %s", pic)
 
-                ret += '<tr><td colspan = "2" border = "1"><img src = "%s" /></td></tr>' % pic
+                ret += f'<tr><td colspan = "2" border = "1"><img src = "{pic}" /></td></tr>'
             else:
                 logging.warning("No profile pic found for %s", pic)
 
@@ -194,13 +187,13 @@ class ModelToGraphVizConverter():
             if self.isPersonExcluded(person): 
                 continue
 
-            out += ("%s [margin=0, border=invisible, label=%s,%s]\n") % (person.dotNodeName, self.getPersonLabelAsDot(person), self.getInfluenceStyleAsDot(person.influence))
+            out += f"{person.dotNodeName} [margin=0, border=invisible, label={self.getPersonLabelAsDot(person)},{self.getInfluenceStyleAsDot(person.influence)}]\n"
 
         for edge in model.edges:
             if self.isPersonExcluded(model.findPerson(edge['origin'])) or self.isPersonExcluded(model.findPerson(edge['destination'])): 
                 continue
 
-            out += ('%s -> %s [label="%s", %s]' % (edge['origin'], model.findPerson(edge['destination']).dotNodeName, edge['type'], self.getEdgeDotStyle(edge))) + "\n"
+            out += f'{edge["origin"]} -> {model.findPerson(edge["destination"]).dotNodeName} [label="{edge["type"]}", {self.getEdgeDotStyle(edge)}]' + "\n"
 
         out += self.getLegendAsDot()
         out += "}"

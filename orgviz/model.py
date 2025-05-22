@@ -12,7 +12,7 @@ class Model():
 
     def __init__(self):
         self.title = "Untitled Organization"
-        self.people = dict()
+        self.people = {}
         self.edges = []
         self.teams = set()
         self.lastPerson = None
@@ -27,7 +27,7 @@ class Model():
         if personFullName in self.people:
             return self.people[personFullName]
 
-        raise Exception("Person not found: " + personFullName)
+        raise RuntimeError("Person not found: " + personFullName)
 
     def addPerson(self, personFullName):
         person = Person(personFullName)

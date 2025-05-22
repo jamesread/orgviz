@@ -17,7 +17,7 @@ class Person():
         self.influence = ""
         self.dmu = "U"
         self.sentiment = "N"
-        self.attributes = dict()
+        self.attributes = {}
 
     @staticmethod
     def getDotNodeNameFromFullName(fullName):
