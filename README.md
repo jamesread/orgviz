@@ -1,11 +1,12 @@
-:sectnums:
-:title: orgviz 
-:sectanchors:
-:toc:
+<div align = "center">
+  <img alt = "project logo" src = "logo.png" width = "128" />
+  <h1>orgviz</h1>
 
-Join the link:https://t.me/joinchat/BqSGNBqlDufb5yuvsV1Xgw[orgviz community telegram chat] for user questions, comments, or development gossip.
+  Organize and Visualize people.
 
-= orgviz 
+[![Maturity](https://img.shields.io/badge/maturity-Production-brightgreen)](#none)
+
+</div>
 
 A tool to visualize the "real" structure of organizations.
 
@@ -13,7 +14,7 @@ image::docs/ExampleCompany.png[]
 
 On a technical level, this tool basically parses a high level text based language, which is compiled to the amazing GraphViz `dia` program language. It provides extra constructs and ease of use for drawing complex org charts (graphs!). 
 
-== Installation
+## Installation
 
 This tool has been tested on Fedora 30, but will almost certainly work on any
 Linux with python3 and Graphviz installed. If Mac's have Graphviz, then it
@@ -28,7 +29,7 @@ The following python3 libraries are also required;
 
 - `python3-configargparse` (note, not just `argparse`)
 
-== Usage
+## Usage
 
 To run orgviz against an input file and generate an image;
 
@@ -39,7 +40,7 @@ For more help;
 `./orgviz.py --help`
 
 
-=== Getting started with the example file
+##= Getting started with the example file
 
 Download the https://raw.githubusercontent.com/jamesread/orgviz/master/examples/ExampleCompany.org[example org file here] (right click on link, save as). Don't
 copy and paste the text because it might break the tabs in the file. 
@@ -59,7 +60,7 @@ xdg-open orgviz.svg (3)
 NOTE: Most image viewers support "refresh", so you can edit in one text editor
 window, and then "refresh" the currently open image just by pressing F5.
 
-== Organization (Input) file syntax
+## Organization (Input) file syntax
 
 ----
 Full Name
@@ -84,7 +85,7 @@ Available attributes include;
 NOTE: You can add any attribute you like, such as `phoneNumber`, or `email`, 
 but attributes not listed above won't be drawn.
 
-== Connections
+## Connections
 
 Connection types can be anything - the format is `[type] -> Full Name`. Some
 common types are `supports`, `reports`, `loves`, etc. 
@@ -92,7 +93,7 @@ common types are `supports`, `reports`, `loves`, etc.
 NOTE: `supports` is the only connection type that draws a "dotted line" between
 people. All other line types are straight arrows.
 
-== Vizualisation Type (`vizType`)
+## Vizualisation Type (`vizType`)
 
 When rendering the picture, there are various ways to vizualize the people. You
 can choose 1 of these options (eg `--vizType none`);
@@ -104,16 +105,16 @@ can choose 1 of these options (eg `--vizType none`);
 3. `none` - everyone is drawn with just white boxes. <<vizTypeNone,Go to `vizType=none` docs>>
 
 
-=== Option 1: `DS` - Decision Making Unit and Sentiment [[vizTypeDs]] (default)
+##= Option 1: `DS` - Decision Making Unit and Sentiment [[vizTypeDs]] (default)
 
 orgviz defaults to this `DS` view, which is useful for sales teams. `DS`
 stands for **Decision Making Unit** (`dmu`) and **Sentiment** (`sentiment`). 
 
-==== Example
+#### Example
 
 image::docs/vizTypeDs.png[Example of DS]
 
-==== How to use
+#### How to use
 
 ----
 James
@@ -136,16 +137,16 @@ Available `sentiment` options;
 - **N**eutral
 - **O**pponent 
 
-=== Option 2: `inf` - Influence [[vizTypeInf]]
+##= Option 2: `inf` - Influence [[vizTypeInf]]
 
 There is also the option to create a more simplistic view, called "influence" - i.e does
 this person have influence over this Opportunity/Account or not?
 
-==== Example
+#### Example
 
 image::docs/vizTypeInf.png[Example of DS]
 
-==== How to use
+#### How to use
 
 ----
 James 
@@ -160,16 +161,16 @@ Available `influence` options;
 - `promoter` - Green
 - `internal` - Black
 
-=== Option 3: Plain display [[vizTypeNone]]
+##= Option 3: Plain display [[vizTypeNone]]
 
 This removes the influence type when generating the
 picture - this is useful for presentations and similar. 
 
-==== Example
+#### Example
 
 image::docs/vizTypeNone.png[Example of no vizType]
 
-==== How to use
+#### How to use
 
 You don't need to change any attributes. Simply run orgviz like this;
 
@@ -177,13 +178,13 @@ You don't need to change any attributes. Simply run orgviz like this;
 ./orgviz.py --vizType none
 ----
 
-== Configuration File
+## Configuration File
 
 If you get tired of specifying command line options, then create
 `~/.orgviz.cfg` and pop your options in there to save time. Use
 `--help` to find syntax for this and the list of all available options.
 
-== Profile pictures
+## Profile pictures
 
 At the moment, profile pictures just come from a directory of `.jpeg` files
 that match people's names. Set the `profilePictureDirectory` option to a
@@ -192,7 +193,7 @@ directory of photos, and `profilePictures` to use this feature.
 There is a separate microservice in development that auto-grabs profile
 pictures and LinkedIn details, but this is not released yet.
 
-== Credits
+## Credits
 
 - Alice: https://www.pexels.com/photo/woman-wearing-blue-top-2169434/[Photo by Heitor Verdi from Pexels]
 - Bob: https://www.pexels.com/photo/photography-of-a-guy-wearing-green-shirt-1222271/[Photo by Justin Shaifer from Pexels]
