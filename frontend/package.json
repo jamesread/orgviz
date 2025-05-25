@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "@bufbuild/protobuf": "^2.5.0",
+    "@connectrpc/connect": "^2.0.2",
+    "@connectrpc/connect-web": "^2.0.2",
     "d3": "^7.9.0",
     "d3-flextree": "^2.1.2",
     "d3-org-chart": "^3.1.1",
