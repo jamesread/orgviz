@@ -1,11 +1,17 @@
-FROM fedora
+FROM registry.fedoraproject.org/fedora-minimal:40-x86_64
 
-RUN yum install -y python3-cherrypy python3-configargparse python3-requests npm make graphviz && yum clean all
+EXPOSE 8080/tcp
 
-COPY . /opt/ 
+LABEL org.opencontainers.image.source https://github.com/jamesread/orgviz
+LABEL org.opencontainers.image.title orgviz
 
-RUN cd /opt/webui/ && npm install -g && make && mkdir /var/www/ && chmod 0777 /var/www/
+COPY frontend-dist /usr/share/orgviz/frontend/
+COPY var/config-skel/ /config/
+COPY orgviz /app/orgviz
 
-USER 1001
+RUN mkdir -p /config/exec/
 
-ENTRYPOINT /opt/web.py --outputDirectoryLocal /var/www/
+VOLUME /config
+VOLUME /usr/libexec/orgviz/
+
+ENTRYPOINT [ "/app/orgviz" ]

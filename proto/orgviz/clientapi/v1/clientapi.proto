@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package clientapi;
+
+option go_package = "github.com/jamesread/orgviz/gen/orgviz/clientapi/v1;clientapi";
+
+service ClientToFrontend {
+	rpc getClientInitialSettings(GetClientInitialSettingsRequest) returns (GetClientInitialSettingsResponse);
+}
+
+message GetClientInitialSettingsRequest {
+
+}
+
+message GetClientInitialSettingsResponse {
+	string version = 1;
+}
+
+

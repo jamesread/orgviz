@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="resources/stylesheets/BrightAndSimpleTheme/style.css"/>
+    <link rel="stylesheet" type="text/css" href="resources/stylesheets/style.css"/>
+    <title>orgviz</title>
+    <meta charset="UTF-8"/>
+  </head>
+  <body>
+    <header> 
+	  <img src = "resources/images/logo.png" class = "logo" />
+
+      <h1>orgviz</h1>
+
+	  <nav>
+		  <ul>
+			<li><a href="http://github.com/jamesread/orgviz/" target="_new">orgviz docs</a></li>
+
+			<li><a href="http://github.com/jamesread/orgviz/" target="_new">GitHub repo</a></li>
+		  </ul>
+	  </nav>
+    </header>
+    <main>
+	  <section>
+        <div id="chart">Loading... </div>
+	  </section>
+    </main>
+
+	<footer>
+		<span id = "current-version">?</span>
+	</footer>
+
+    <script type = "module">
+		import { init } from './resources/javascript/main.js';
+
+		init()
+	</script>
+  </body>
+</html>

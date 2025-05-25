@@ -1,0 +1,10 @@
+@title: Simple Influence Style
+
+Good Person
+	influence: promoter
+
+Bad Person
+	influence: enemy
+
+Neutral Person:
+	influence: neutal

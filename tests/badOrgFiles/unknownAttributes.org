@@ -1,8 +1,0 @@
-@title: One
-@somethingElse: two
-@somethingElse: two
-
-Alice
-	reports -> Bob
-
-Bob

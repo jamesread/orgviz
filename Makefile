@@ -1,4 +1,15 @@
-default:
+default: proto service frontend
+
+proto:
+	$(MAKE) -wC proto
+
+service:
+	$(MAKE) -wC service
+
+frontend:
+	$(MAKE) -wC frontend
+
+py:
 	./orgviz.py 
 
 docker: container
@@ -27,4 +38,4 @@ lint:
 lint-debian:
 	pylint orgviz
 
-.PHONY: docs default test 
+.PHONY: docs default test default service proto frontend

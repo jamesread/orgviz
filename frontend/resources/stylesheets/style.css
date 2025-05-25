@@ -1,0 +1,62 @@
+textarea {
+	min-height: 300px;
+	border: 1px solid black;
+	margin: 0;
+	resize: none;
+	padding: .2em;
+	flex-grow: 1;
+}
+
+div#editingArea {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+div#editToolbar {
+	background-color: #eee;
+	border: 1px solid black;
+	border-top: 0;
+	padding: .4em;
+}
+
+div#editToolbar span {
+	padding: .2em;
+	margin: .2em;
+}
+
+div#editToolbar * {
+	vertical-align: middle;
+}
+
+p:last-child {
+	margin-bottom: 0;
+}
+
+div#titleAndLink {
+	display: flex;
+}
+
+div#titleAndLink h2 {
+	flex-grow: 1;
+}
+
+div#titleAndLink a {
+	margin: auto;
+	font-size: smaller;
+	text-decoration: none;
+}
+
+div.person {
+	border: 2px solid purple;;
+	padding: .6em;
+	border-radius: 1em;
+}
+
+div.person h3 {
+	margin-top: 0;
+}
+
+div.person:hover {
+	border: 2px solid darkviolet;
+}
