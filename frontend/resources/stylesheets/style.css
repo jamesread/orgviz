@@ -48,9 +48,12 @@ div#titleAndLink a {
 }
 
 div.person {
-	border: 2px solid purple;;
+	border: 1px solid #ccc;
+	border-top: 4px solid purple;
 	padding: .6em;
-	border-radius: 1em;
+	border-radius: 0;
+	background-color: white;
+	box-shadow: 0 0 5px rgba(0, 0, 0, .3);
 }
 
 div.person h3 {
@@ -59,4 +62,16 @@ div.person h3 {
 
 div.person:hover {
 	border: 2px solid darkviolet;
+}
+
+@media (prefers-color-scheme: dark) {
+	div.person {
+		background-color: #383030;
+		border: 1px solid #444;
+		border-top: 4px solid #a0a;
+	}
+
+	footer span {
+		color: black;
+	}
 }

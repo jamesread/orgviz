@@ -43,7 +43,17 @@ async function initChart() {
 
   window.people = people
 
-  window.chart = new OrgChart().container('#chart');
+  window.chart = new OrgChart()
+    .nodeHeight((d) => 85)
+    .container('#chart')
+    .childrenMargin((d) => 50)
+    .compactMarginBetween((d) => 35)
+    .compactMarginPair((d) => 30)
+    .neighbourMargin((a, b) => 20)
+    .linkUpdate(function(d, i, arr) {
+      return d3.select(this).attr('stroke', '#666')
+    })
+
   window.chart.nodeContent(renderNodeContent)
 
   window.chart.data(people).render();
@@ -52,6 +62,6 @@ async function initChart() {
 function renderNodeContent(d) {
   return `<div class="person">
             <h3>${d.data.fullName}</h3>
-            <p>ID: ${d.data.id}</p>
+            <p>${d.data.jobTitle}</p>
           </div>`;
 }

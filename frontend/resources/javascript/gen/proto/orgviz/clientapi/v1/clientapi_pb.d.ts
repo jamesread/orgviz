@@ -90,14 +90,14 @@ export declare type Person = Message<"clientapi.Person"> & {
   parentId: number;
 
   /**
-   * @generated from field: string name = 3;
-   */
-  name: string;
-
-  /**
-   * @generated from field: string full_name = 4;
+   * @generated from field: string full_name = 3;
    */
   fullName: string;
+
+  /**
+   * @generated from field: string job_title = 4;
+   */
+  jobTitle: string;
 };
 
 /**

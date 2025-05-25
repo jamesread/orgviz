@@ -15,23 +15,27 @@ func NewServer() *clientApi {
 	api := &clientApi{}
 	api.People = make([]*pb.Person, 0)
 
+	api.AddPerson(1, -1, "James Read", "Benevolent Dictator For Life")
+	api.AddPerson(2, 1, "Alice Smith", "Product Manager")
+	api.AddPerson(3, 1, "Bob Johnson", "Designer")
+	api.AddPerson(4, 2, "Charlie Brown", "Software Engineer")
+	api.AddPerson(5, 2, "Diana Prince", "QA Engineer")
+	api.AddPerson(6, 3, "Eve Adams", "UX Researcher")
+	api.AddPerson(7, 4, "Frank Castle", "DevOps Engineer")
+	api.AddPerson(8, 5, "Grace Hopper", "Data Scientist")
+	api.AddPerson(9, 6, "Hank Pym", "Security Analyst")
 
-	api.AddPerson(1, -1, "Alice")
-	api.AddPerson(2, 1, "Bob")
-	api.AddPerson(3, 1, "Charlie")
-	api.AddPerson(4, 2, "David")
-	api.AddPerson(5, 2, "Eve")
-	api.AddPerson(6, 3, "Frank")
+
 
 	return api
 }
 
-func (c *clientApi) AddPerson(id int32, parent int32, fullName string) {
+func (c *clientApi) AddPerson(id int32, parent int32, fullName string, jobTitle string) {
 	person := &pb.Person{
 		Id:       id,
 		ParentId:   parent,
-		Name:     fullName,
 		FullName: fullName,
+		JobTitle: jobTitle,
 	}
 
 	c.People = append(c.People, person)

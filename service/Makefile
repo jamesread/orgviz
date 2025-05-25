@@ -3,7 +3,6 @@ GIT_COMMIT := $(shell git rev-parse --short HEAD)
 GIT_TAG := $(shell git describe --tags --abbrev=0 2>/dev/null || echo HEAD)
 
 ci: build
-	rm orgviz
 
 build:
 	go build -o orgviz -ldflags "-s -w \

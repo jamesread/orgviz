@@ -1,8 +1,5 @@
 **/*.swp
 **/*.swo
-**/*.png
-**/*.jpeg
-**/*.svg
 __pycache__
 htmlcov
 .coverage

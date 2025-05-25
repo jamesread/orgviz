@@ -30,6 +30,6 @@ message GetChartResponse {
 message Person {
 	int32 id = 1;
 	int32 parentId = 2;
-	string name = 3;
-	string full_name = 4;
+	string full_name = 3;
+	string job_title = 4;
 }
