@@ -1,0 +1,34 @@
+= Docker Compose
+
+.docker-compose.yml
+[source,yaml]
+----
+---
+services:
+  orgviz:
+    container_name: orgviz
+    image: ghcr.io/jamesread/orgviz:latest
+    volumes:
+      - orgviz-config:/config
+    restart: unless-stopped
+    ports:
+      - "4337:4337"
+    networks:
+      - orgviz-network
+
+  mariadb:
+    container_name: mariadb
+    image: docker.io/mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: password
+      MARIADB_DATABASE: orgviz
+
+volumes:
+  orgviz-config:
+    name: orgviz-config
+    external: false
+
+networks:
+  orgviz-network:
+    external: false
+----
