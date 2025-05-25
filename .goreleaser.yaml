@@ -1,0 +1,39 @@
+---
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+version: 2
+
+builds:
+  - id: orgviz
+    dir: service
+    main: main.go
+    binary: orgviz
+    env: [CGO_ENABLED=0]
+    goos: [linux]
+    goarch: [amd64]
+    ldflags:
+      - >
+        -s -w
+        -X github.com/jamesread/orgviz/internal/buildinfo.Version={{.Version}}
+        -X github.com/jamesread/orgviz/internal/buildinfo.GitCommit={{.Commit}}
+        -X github.com/jamesread/orgviz/internal/buildinfo.BuildDate={{.Date}}
+
+archives: []
+
+dockers:
+  - id: orgviz
+    dockerfile: Dockerfile
+    image_templates:
+      - ghcr.io/jamesread/orgviz
+    extra_files:
+      - README.md
+      - frontend-dist
+      - var/config-skel/
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
