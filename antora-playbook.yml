@@ -1,6 +1,6 @@
 ---
 site:
-  title: StencilBox docs
+  title: orgviz docs
   start_page: ROOT::index.adoc
   robots: allow
 content:

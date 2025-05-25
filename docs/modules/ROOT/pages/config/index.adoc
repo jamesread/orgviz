@@ -1,6 +1,6 @@
 = Configuration
 
-All configuration of StencilBox is via a configuration file called `config.yaml`. When running StencilBox via Docker, this file is located in the `/config` directory.
+All configuration of orgviz is via a configuration file called `config.yaml`. When running orgviz via Docker, this file is located in the `/config` directory.
 
 The configuration file can be created and edited using any text editor. The configuration file is in YAML format, which is a human-readable data serialization standard.
 
