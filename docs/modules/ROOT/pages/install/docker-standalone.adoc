@@ -3,11 +3,11 @@
 .Bash
 [source,bash]
 ----
-docker pull ghcr.io/jamesread/stencilbox:latest
+docker pull ghcr.io/jamesread/orgviz:latest
 docker create \
-  --name StencilBox \
-  -v stencilbox-config:/config \
+  --name orgviz \
+  -v orgviz-config:/config \
   -p 4337:4337 \
   --restart unless-stopped \
-  ghcr.io/jamesread/stencilbox:latest
----
+  ghcr.io/jamesread/orgviz:latest
+----
