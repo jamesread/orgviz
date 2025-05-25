@@ -4,7 +4,7 @@
 
   Organize and Visualize people.
 
-[![Maturity](https://img.shields.io/badge/maturity-Production-brightgreen)](#none)
+[![Maturity](https://img.shields.io/badge/maturity-Sandbox-yellow)](#none)
 
 </div>
 
