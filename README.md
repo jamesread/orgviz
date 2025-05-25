@@ -2,7 +2,7 @@
   <img alt = "project logo" src = "logo.png" width = "128" />
   <h1>orgviz</h1>
 
-  Organize and Visualize people.
+  Visualize collections of people.
 
 [![Maturity](https://img.shields.io/badge/maturity-Sandbox-yellow)](#none)
 
