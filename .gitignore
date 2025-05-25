@@ -10,3 +10,4 @@ README.html
 /frontend-dist
 /build
 service/orgviz
+**/*.log

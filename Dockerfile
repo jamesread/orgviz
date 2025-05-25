@@ -5,7 +5,7 @@ EXPOSE 8080/tcp
 LABEL org.opencontainers.image.source https://github.com/jamesread/orgviz
 LABEL org.opencontainers.image.title orgviz
 
-COPY frontend-dist /usr/share/orgviz/frontend/
+COPY frontend-dist/ /usr/share/orgviz/frontend/
 COPY var/config-skel/ /config/
 COPY orgviz /app/orgviz
 
