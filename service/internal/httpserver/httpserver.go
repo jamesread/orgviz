@@ -38,15 +38,17 @@ func getNewApiHandler(cfg *config.Config) (string, http.Handler) {
 }
 
 func findWebuiDir() string {
-	directoriesToSearch := []string{
+	return findFirstExistingDirectory("webui", []string{
 		"../frontend/dist/",
 		"../frontend/",
 		"/frontend/",
 		"/usr/share/orgviz/frontend/",
 		"/var/www/orgviz/",
 		"/etc/orgviz/frontend/",
-	}
+	})
+}
 
+func findFirstExistingDirectory(name string, directoriesToSearch []string) string {
 	for _, dir := range directoriesToSearch {
 		if _, err := os.Stat(dir); !os.IsNotExist(err) {
 			absdir, _ := filepath.Abs(dir)
@@ -54,24 +56,34 @@ func findWebuiDir() string {
 			log.WithFields(log.Fields{
 				"dir": dir,
 				"absdir": absdir,
-			}).Infof("Found the webui directory")
+			}).Infof("Found the %v directory", name)
 
 			return absdir
 		}
 	}
 
-	log.Warnf("Did not find the webui directory, you will probably get 404 errors.")
+	log.Warnf("Did not find the %v directory, you will probably get 404 errors.", name)
 
-	return "./webui" // Should not exist
+	return "./null/" // Should not exist
+}
+
+func findAvatarDir() string {
+	return findFirstExistingDirectory("avatars", []string{
+		"../var/config-skel/avatars/",
+		"/config/avatars/",
+		"/usr/share/orgviz/avatars/",
+		"/var/www/orgviz/avatars/",
+		"/etc/orgviz/avatars/",
+	})
 }
 
 func getNewWebUIHandler(dir string) http.Handler {
-	return http.StripPrefix("/", http.FileServer(http.Dir(dir)))
+	return http.FileServer(http.Dir(dir))
 }
 
 func Start(cfg *config.Config) {
 	const port = 8080
-	
+
 	log.WithFields(log.Fields{
 		"port": port,
 	}).Info("Starting HTTP server")
@@ -88,11 +100,8 @@ func Start(cfg *config.Config) {
 		http.StripPrefix("/api", apihandler).ServeHTTP(w, r)
 	})
 
-	webuiPath := findWebuiDir()
-
-	log.Infof("WebUI path: %s", webuiPath)
-
-	mux.Handle("/", getNewWebUIHandler(webuiPath))
+	mux.Handle("/avatars/", http.StripPrefix("/avatars/", http.FileServer(http.Dir(findAvatarDir()))))
+	mux.Handle("/", getNewWebUIHandler(findWebuiDir()))
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf("0.0.0.0:%v", port),

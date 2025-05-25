@@ -98,6 +98,11 @@ export declare type Person = Message<"clientapi.Person"> & {
    * @generated from field: string job_title = 4;
    */
   jobTitle: string;
+
+  /**
+   * @generated from field: string avatar_url = 5;
+   */
+  avatarUrl: string;
 };
 
 /**

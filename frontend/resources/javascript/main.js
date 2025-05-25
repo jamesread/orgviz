@@ -61,7 +61,11 @@ async function initChart() {
 
 function renderNodeContent(d) {
   return `<div class="person">
+            <img src="${d.data.avatarUrl}" alt="${d.data.fullName}" class="avatar" />
+            <div class="person-info">
             <h3>${d.data.fullName}</h3>
             <p>${d.data.jobTitle}</p>
+            </div>
+
           </div>`;
 }

@@ -32,4 +32,5 @@ message Person {
 	int32 parentId = 2;
 	string full_name = 3;
 	string job_title = 4;
+	string avatar_url = 5;
 }
