@@ -33,27 +33,25 @@ async function setupApi() {
 	document.getElementById('current-version').innerText = 'Version: ' + status.version;
 }
 
-function initChart() {
+async function initChart() {
   document.getElementById('chart').innerHTML = ''; // Clear previous chart
 
-  const data = [
-    { id: 1, parentId: null, name: 'Alice' },
-    { id: 2, parentId: 1, name: 'Bob' },
-    { id: 3, parentId: 1, name: 'Charlie' },
-    { id: 4, parentId: 2, name: 'David' },
-    { id: 5, parentId: 2, name: 'Eve' },
-    { id: 6, parentId: 3, name: 'Frank' }
-  ]
+  const data = await window.client.getChart({});
+  let people = data.people;
+
+  people[0].parentId = null; // Ensure the root node has no parent
+
+  window.people = people
 
   window.chart = new OrgChart().container('#chart');
   window.chart.nodeContent(renderNodeContent)
 
-  window.chart.data(data).render();
+  window.chart.data(people).render();
 }
 
 function renderNodeContent(d) {
   return `<div class="person">
-            <h3>${d.data.name}</h3>
+            <h3>${d.data.fullName}</h3>
             <p>ID: ${d.data.id}</p>
           </div>`;
 }

@@ -36,11 +36,15 @@ const (
 	// ClientToFrontendGetClientInitialSettingsProcedure is the fully-qualified name of the
 	// ClientToFrontend's getClientInitialSettings RPC.
 	ClientToFrontendGetClientInitialSettingsProcedure = "/clientapi.ClientToFrontend/getClientInitialSettings"
+	// ClientToFrontendGetChartProcedure is the fully-qualified name of the ClientToFrontend's getChart
+	// RPC.
+	ClientToFrontendGetChartProcedure = "/clientapi.ClientToFrontend/getChart"
 )
 
 // ClientToFrontendClient is a client for the clientapi.ClientToFrontend service.
 type ClientToFrontendClient interface {
 	GetClientInitialSettings(context.Context, *connect.Request[v1.GetClientInitialSettingsRequest]) (*connect.Response[v1.GetClientInitialSettingsResponse], error)
+	GetChart(context.Context, *connect.Request[v1.GetChartRequest]) (*connect.Response[v1.GetChartResponse], error)
 }
 
 // NewClientToFrontendClient constructs a client for the clientapi.ClientToFrontend service. By
@@ -60,12 +64,19 @@ func NewClientToFrontendClient(httpClient connect.HTTPClient, baseURL string, op
 			connect.WithSchema(clientToFrontendMethods.ByName("getClientInitialSettings")),
 			connect.WithClientOptions(opts...),
 		),
+		getChart: connect.NewClient[v1.GetChartRequest, v1.GetChartResponse](
+			httpClient,
+			baseURL+ClientToFrontendGetChartProcedure,
+			connect.WithSchema(clientToFrontendMethods.ByName("getChart")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // clientToFrontendClient implements ClientToFrontendClient.
 type clientToFrontendClient struct {
 	getClientInitialSettings *connect.Client[v1.GetClientInitialSettingsRequest, v1.GetClientInitialSettingsResponse]
+	getChart                 *connect.Client[v1.GetChartRequest, v1.GetChartResponse]
 }
 
 // GetClientInitialSettings calls clientapi.ClientToFrontend.getClientInitialSettings.
@@ -73,9 +84,15 @@ func (c *clientToFrontendClient) GetClientInitialSettings(ctx context.Context, r
 	return c.getClientInitialSettings.CallUnary(ctx, req)
 }
 
+// GetChart calls clientapi.ClientToFrontend.getChart.
+func (c *clientToFrontendClient) GetChart(ctx context.Context, req *connect.Request[v1.GetChartRequest]) (*connect.Response[v1.GetChartResponse], error) {
+	return c.getChart.CallUnary(ctx, req)
+}
+
 // ClientToFrontendHandler is an implementation of the clientapi.ClientToFrontend service.
 type ClientToFrontendHandler interface {
 	GetClientInitialSettings(context.Context, *connect.Request[v1.GetClientInitialSettingsRequest]) (*connect.Response[v1.GetClientInitialSettingsResponse], error)
+	GetChart(context.Context, *connect.Request[v1.GetChartRequest]) (*connect.Response[v1.GetChartResponse], error)
 }
 
 // NewClientToFrontendHandler builds an HTTP handler from the service implementation. It returns the
@@ -91,10 +108,18 @@ func NewClientToFrontendHandler(svc ClientToFrontendHandler, opts ...connect.Han
 		connect.WithSchema(clientToFrontendMethods.ByName("getClientInitialSettings")),
 		connect.WithHandlerOptions(opts...),
 	)
+	clientToFrontendGetChartHandler := connect.NewUnaryHandler(
+		ClientToFrontendGetChartProcedure,
+		svc.GetChart,
+		connect.WithSchema(clientToFrontendMethods.ByName("getChart")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/clientapi.ClientToFrontend/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case ClientToFrontendGetClientInitialSettingsProcedure:
 			clientToFrontendGetClientInitialSettingsHandler.ServeHTTP(w, r)
+		case ClientToFrontendGetChartProcedure:
+			clientToFrontendGetChartHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -106,4 +131,8 @@ type UnimplementedClientToFrontendHandler struct{}
 
 func (UnimplementedClientToFrontendHandler) GetClientInitialSettings(context.Context, *connect.Request[v1.GetClientInitialSettingsRequest]) (*connect.Response[v1.GetClientInitialSettingsResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("clientapi.ClientToFrontend.getClientInitialSettings is not implemented"))
+}
+
+func (UnimplementedClientToFrontendHandler) GetChart(context.Context, *connect.Request[v1.GetChartRequest]) (*connect.Response[v1.GetChartResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("clientapi.ClientToFrontend.getChart is not implemented"))
 }

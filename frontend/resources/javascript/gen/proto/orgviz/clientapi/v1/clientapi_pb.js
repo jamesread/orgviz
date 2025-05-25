@@ -8,7 +8,7 @@ import { fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2
  * Describes the file orgviz/clientapi/v1/clientapi.proto.
  */
 export const file_orgviz_clientapi_v1_clientapi = /*@__PURE__*/
-  fileDesc("CiNvcmd2aXovY2xpZW50YXBpL3YxL2NsaWVudGFwaS5wcm90bxIJY2xpZW50YXBpIiEKH0dldENsaWVudEluaXRpYWxTZXR0aW5nc1JlcXVlc3QiMwogR2V0Q2xpZW50SW5pdGlhbFNldHRpbmdzUmVzcG9uc2USDwoHdmVyc2lvbhgBIAEoCTKHAQoQQ2xpZW50VG9Gcm9udGVuZBJzChhnZXRDbGllbnRJbml0aWFsU2V0dGluZ3MSKi5jbGllbnRhcGkuR2V0Q2xpZW50SW5pdGlhbFNldHRpbmdzUmVxdWVzdBorLmNsaWVudGFwaS5HZXRDbGllbnRJbml0aWFsU2V0dGluZ3NSZXNwb25zZUI/Wj1naXRodWIuY29tL2phbWVzcmVhZC9vcmd2aXovZ2VuL29yZ3Zpei9jbGllbnRhcGkvdjE7Y2xpZW50YXBpYgZwcm90bzM");
+  fileDesc("CiNvcmd2aXovY2xpZW50YXBpL3YxL2NsaWVudGFwaS5wcm90bxIJY2xpZW50YXBpIiEKH0dldENsaWVudEluaXRpYWxTZXR0aW5nc1JlcXVlc3QiMwogR2V0Q2xpZW50SW5pdGlhbFNldHRpbmdzUmVzcG9uc2USDwoHdmVyc2lvbhgBIAEoCSIiCg9HZXRDaGFydFJlcXVlc3QSDwoHY2hhcnRJZBgBIAEoCSJGChBHZXRDaGFydFJlc3BvbnNlEg8KB2NoYXJ0SWQYASABKAkSIQoGcGVvcGxlGAIgAygLMhEuY2xpZW50YXBpLlBlcnNvbiJHCgZQZXJzb24SCgoCaWQYASABKAUSEAoIcGFyZW50SWQYAiABKAUSDAoEbmFtZRgDIAEoCRIRCglmdWxsX25hbWUYBCABKAkyzAEKEENsaWVudFRvRnJvbnRlbmQScwoYZ2V0Q2xpZW50SW5pdGlhbFNldHRpbmdzEiouY2xpZW50YXBpLkdldENsaWVudEluaXRpYWxTZXR0aW5nc1JlcXVlc3QaKy5jbGllbnRhcGkuR2V0Q2xpZW50SW5pdGlhbFNldHRpbmdzUmVzcG9uc2USQwoIZ2V0Q2hhcnQSGi5jbGllbnRhcGkuR2V0Q2hhcnRSZXF1ZXN0GhsuY2xpZW50YXBpLkdldENoYXJ0UmVzcG9uc2VCP1o9Z2l0aHViLmNvbS9qYW1lc3JlYWQvb3Jndml6L2dlbi9vcmd2aXovY2xpZW50YXBpL3YxO2NsaWVudGFwaWIGcHJvdG8z");
 
 /**
  * Describes the message clientapi.GetClientInitialSettingsRequest.
@@ -23,6 +23,27 @@ export const GetClientInitialSettingsRequestSchema = /*@__PURE__*/
  */
 export const GetClientInitialSettingsResponseSchema = /*@__PURE__*/
   messageDesc(file_orgviz_clientapi_v1_clientapi, 1);
+
+/**
+ * Describes the message clientapi.GetChartRequest.
+ * Use `create(GetChartRequestSchema)` to create a new message.
+ */
+export const GetChartRequestSchema = /*@__PURE__*/
+  messageDesc(file_orgviz_clientapi_v1_clientapi, 2);
+
+/**
+ * Describes the message clientapi.GetChartResponse.
+ * Use `create(GetChartResponseSchema)` to create a new message.
+ */
+export const GetChartResponseSchema = /*@__PURE__*/
+  messageDesc(file_orgviz_clientapi_v1_clientapi, 3);
+
+/**
+ * Describes the message clientapi.Person.
+ * Use `create(PersonSchema)` to create a new message.
+ */
+export const PersonSchema = /*@__PURE__*/
+  messageDesc(file_orgviz_clientapi_v1_clientapi, 4);
 
 /**
  * @generated from service clientapi.ClientToFrontend

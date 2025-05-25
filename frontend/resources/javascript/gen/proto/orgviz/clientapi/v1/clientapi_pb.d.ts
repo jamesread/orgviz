@@ -39,6 +39,74 @@ export declare type GetClientInitialSettingsResponse = Message<"clientapi.GetCli
 export declare const GetClientInitialSettingsResponseSchema: GenMessage<GetClientInitialSettingsResponse>;
 
 /**
+ * @generated from message clientapi.GetChartRequest
+ */
+export declare type GetChartRequest = Message<"clientapi.GetChartRequest"> & {
+  /**
+   * @generated from field: string chartId = 1;
+   */
+  chartId: string;
+};
+
+/**
+ * Describes the message clientapi.GetChartRequest.
+ * Use `create(GetChartRequestSchema)` to create a new message.
+ */
+export declare const GetChartRequestSchema: GenMessage<GetChartRequest>;
+
+/**
+ * @generated from message clientapi.GetChartResponse
+ */
+export declare type GetChartResponse = Message<"clientapi.GetChartResponse"> & {
+  /**
+   * @generated from field: string chartId = 1;
+   */
+  chartId: string;
+
+  /**
+   * @generated from field: repeated clientapi.Person people = 2;
+   */
+  people: Person[];
+};
+
+/**
+ * Describes the message clientapi.GetChartResponse.
+ * Use `create(GetChartResponseSchema)` to create a new message.
+ */
+export declare const GetChartResponseSchema: GenMessage<GetChartResponse>;
+
+/**
+ * @generated from message clientapi.Person
+ */
+export declare type Person = Message<"clientapi.Person"> & {
+  /**
+   * @generated from field: int32 id = 1;
+   */
+  id: number;
+
+  /**
+   * @generated from field: int32 parentId = 2;
+   */
+  parentId: number;
+
+  /**
+   * @generated from field: string name = 3;
+   */
+  name: string;
+
+  /**
+   * @generated from field: string full_name = 4;
+   */
+  fullName: string;
+};
+
+/**
+ * Describes the message clientapi.Person.
+ * Use `create(PersonSchema)` to create a new message.
+ */
+export declare const PersonSchema: GenMessage<Person>;
+
+/**
  * @generated from service clientapi.ClientToFrontend
  */
 export declare const ClientToFrontend: GenService<{
@@ -49,6 +117,14 @@ export declare const ClientToFrontend: GenService<{
     methodKind: "unary";
     input: typeof GetClientInitialSettingsRequestSchema;
     output: typeof GetClientInitialSettingsResponseSchema;
+  },
+  /**
+   * @generated from rpc clientapi.ClientToFrontend.getChart
+   */
+  getChart: {
+    methodKind: "unary";
+    input: typeof GetChartRequestSchema;
+    output: typeof GetChartResponseSchema;
   },
 }>;
 
