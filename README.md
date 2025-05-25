@@ -8,11 +8,12 @@
 
 </div>
 
-A tool to visualize the "real" structure of organizations.
+## Screenshots
 
 ![Screenshot 1](var/marketing/screenshot1.png)
 
-On a technical level, this tool basically parses a high level text based language, which is compiled to the amazing GraphViz `dia` program language. It provides extra constructs and ease of use for drawing complex org charts (graphs!).
+orgviz v2 renders to a web interface.
+orgviz v1 renders to a static image, such as a PNG or SVG.
 
 ## Installation
 
