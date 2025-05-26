@@ -16,6 +16,7 @@ message GetClientInitialSettingsRequest {
 
 message GetClientInitialSettingsResponse {
 	string version = 1;
+	repeated ChartInfo charts = 2;
 }
 
 message GetChartRequest {
@@ -33,4 +34,9 @@ message Person {
 	string full_name = 3;
 	string job_title = 4;
 	string avatar_url = 5;
+}
+
+message ChartInfo {
+    string chartId = 1;
+	string title = 2;
 }
