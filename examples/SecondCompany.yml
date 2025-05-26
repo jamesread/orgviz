@@ -1,0 +1,15 @@
+title: Second Company
+
+people:
+  - name: Bob
+    title: Founder
+    reports: Alice
+
+  - name: Alice
+    title: CEO
+    alias: ali
+    reports: Bob
+
+  - name: Charles
+    title: CFO
+    reports: Alice

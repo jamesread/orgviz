@@ -10,7 +10,26 @@ export function init() {
   createApiClient();
   setupApi()
 
+  document.getElementById('change-layout').onclick = () => {
+    changeLayout()
+  }
+  console.log('Initializing OrgViz...');
+
+  window.isCompact = true;
+
   initChart();
+  loadChart('0')
+}
+
+function changeLayout() {
+  document.getElementById('change-layout').innerText = window.isCompact ? 'Compact layout' : 'Expand layout';
+
+
+  window.isCompact = !window.isCompact;
+
+  console.log('Changing layout to', window.isCompact ? 'compact' : 'expanded');
+
+  window.chart.compact(window.isCompact).render().fit()
 }
 
 function createApiClient() {
@@ -28,18 +47,55 @@ function createApiClient() {
 }
 
 async function setupApi() {
-	const status = await window.client.getClientInitialSettings()
+  const status = await window.client.getClientInitialSettings()
 
-	document.getElementById('current-version').innerText = 'Version: ' + status.version;
+  const chartsList = document.getElementById('charts-list');
+
+  for (let chart of status.charts) {
+    const href = document.createElement('a');
+    href.innerText = chart.title;
+    href.href = '#';
+    href.onclick = () => {
+      loadChart(chart.chartId);
+    }
+
+    const li = document.createElement('li');
+    li.appendChild(href)
+
+    chartsList.appendChild(li);
+  }
+
+  document.getElementById('current-version').innerText = 'Version: ' + status.version;
 }
 
-async function initChart() {
+function initChart() {
+}
+
+async function loadChart(idToLoad) {
+  console.log('Loading chart with ID:', idToLoad);
+
   document.getElementById('chart').innerHTML = ''; // Clear previous chart
 
-  const data = await window.client.getChart({});
+  const data = await window.client.getChart({
+    chartId: idToLoad,
+  });
+
   let people = data.people;
 
-  people[0].parentId = null; // Ensure the root node has no parent
+  // Clean people reporting lines
+  for (let i = 0; i < people.length; i++) {
+    if (people[i].parentId === 0) {
+      people[i].parentId = 1;
+    }
+  }
+  people[0].parentId = null;
+
+  // Set avatar url
+  for (let person of people) {
+    if (person.avatarUrl === '') {
+      person.avatarUrl = '/avatars/default.png';
+    }
+  }
 
   window.people = people
 
@@ -50,6 +106,7 @@ async function initChart() {
     .compactMarginBetween((d) => 35)
     .compactMarginPair((d) => 30)
     .neighbourMargin((a, b) => 20)
+    .compact(window.isCompact)
     .linkUpdate(function(d, i, arr) {
       return d3.select(this).attr('stroke', '#666')
     })

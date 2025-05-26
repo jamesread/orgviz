@@ -30,6 +30,11 @@ export declare type GetClientInitialSettingsResponse = Message<"clientapi.GetCli
    * @generated from field: string version = 1;
    */
   version: string;
+
+  /**
+   * @generated from field: repeated clientapi.ChartInfo charts = 2;
+   */
+  charts: ChartInfo[];
 };
 
 /**
@@ -64,7 +69,12 @@ export declare type GetChartResponse = Message<"clientapi.GetChartResponse"> & {
   chartId: string;
 
   /**
-   * @generated from field: repeated clientapi.Person people = 2;
+   * @generated from field: string title = 2;
+   */
+  title: string;
+
+  /**
+   * @generated from field: repeated clientapi.Person people = 3;
    */
   people: Person[];
 };
@@ -110,6 +120,27 @@ export declare type Person = Message<"clientapi.Person"> & {
  * Use `create(PersonSchema)` to create a new message.
  */
 export declare const PersonSchema: GenMessage<Person>;
+
+/**
+ * @generated from message clientapi.ChartInfo
+ */
+export declare type ChartInfo = Message<"clientapi.ChartInfo"> & {
+  /**
+   * @generated from field: string chartId = 1;
+   */
+  chartId: string;
+
+  /**
+   * @generated from field: string title = 2;
+   */
+  title: string;
+};
+
+/**
+ * Describes the message clientapi.ChartInfo.
+ * Use `create(ChartInfoSchema)` to create a new message.
+ */
+export declare const ChartInfoSchema: GenMessage<ChartInfo>;
 
 /**
  * @generated from service clientapi.ClientToFrontend

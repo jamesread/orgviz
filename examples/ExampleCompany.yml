@@ -1,0 +1,88 @@
+---
+title: Example Company
+
+people:
+  - name: Alice Smith
+    title: CEO
+    team: Leadership
+    alias: ali
+    attributes:
+      dmu: D
+      sentiment: N
+
+  - name: Bob Johnson
+    title: Product Manager
+    team: Leadership
+    alias: bob
+    attributes:
+      dmu: B
+      sentiment: N
+
+  - name: Charles Brown
+    title: CMO
+    team: Leadership
+    attributes:
+      dmu: I
+      sentiment: N
+
+  - name: Dave Wilson
+    title: Sales
+    team: Leadership
+    reports: Imogen Clark
+    attributes:
+      dmu: G
+      sentiment: N
+
+  - name: Eve Adams
+    title: UX Designer
+    team: Leadership
+    reports: bob
+    attributes:
+      dmu: U
+      sentiment: P
+
+  - name: Fred Miller
+    title: Marketing Manager
+    team: Marketing
+    reports: Charles Brown
+    attributes:
+      dmu: U
+      sentiment: N
+
+  - name: Grace Lee
+    reports: Charles Brown
+    title: SEO Expert
+    team: Marketing
+    attributes:
+      sentiment: N
+      dmu: U
+    connections:
+      - name: loves
+        target: Alice
+
+  - name: Hank Taylor
+    title: Software Engineer
+    reports: bob
+    connections:
+      - name: supports
+        target: Fred
+    team: IT
+    attributes:
+      sentiment: N
+      dmu: U
+
+  - name: Imogen Clark
+    title: Sales Leader
+    reports: Alice
+    team: IT
+    attributes:
+       dmu: B
+       sentiment: N
+
+  - name: Lisa-Marie "Liz" Johnson
+    reports: bob
+    team: Leadership
+    attributes:
+      dmu: U
+      sentiment: P
+    title: Design Lead
