@@ -11,7 +11,7 @@ builds:
     binary: orgviz
     env: [CGO_ENABLED=0]
     goos: [linux]
-    goarch: [amd64]
+    goarch: [amd64, arm64]
     ldflags:
       - >
         -s -w
@@ -22,14 +22,48 @@ builds:
 archives: []
 
 dockers:
-  - id: orgviz
-    dockerfile: Dockerfile
+  - dockerfile: Dockerfile
     image_templates:
-      - ghcr.io/jamesread/orgviz
+      - "ghcr.io/jamesread/orgviz:{{ .Tag }}-amd64"
+    goos: linux
+    goarch: amd64
+    use: buildx
+    skip_push: false
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Tag}}"
     extra_files:
       - README.md
       - frontend-dist
       - var/config-skel/
+
+  - dockerfile: Dockerfile
+    image_templates:
+      - "ghcr.io/jamesread/orgviz:{{ .Tag }}-arm64"
+    goos: linux
+    goarch: arm64
+    use: buildx
+    skip_push: false
+    build_flag_templates:
+      - "--platform=linux/arm64"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Tag}}"
+    extra_files:
+      - README.md
+      - frontend-dist
+      - var/config-skel/
+
+docker_manifests:
+  - name_template: ghcr.io/jamesread/orgviz:latest
+    image_templates:
+      - ghcr.io/jamesread/orgviz:{{ .Version }}-amd64
+      - ghcr.io/jamesread/orgviz:{{ .Version }}-arm64
+
+  - name_template: ghcr.io/jamesread/orgviz:{{ .Version }}
+    image_templates:
+      - ghcr.io/jamesread/orgviz:{{ .Version }}-amd64
+      - ghcr.io/jamesread/orgviz:{{ .Version }}-arm64
 
 changelog:
   sort: asc
