@@ -108,6 +108,7 @@ func linkPeopleIds(orgfile *OrgFile) {
 
 func (api *clientApi) readOrgFiles() {
 	orgdir, _ := dirs.GetFirstExistingDirectory([]string{
+		"../var/config-skel/orgs/",
 		"/config/orgs/",
 		"../examples/",
 	});
