@@ -1,3 +1,6 @@
+@import 'femtocrank/style.css';
+@import 'femtocrank/dark.css' only screen and (prefers-color-scheme: dark);
+
 textarea {
 	min-height: 300px;
 	border: 1px solid black;
