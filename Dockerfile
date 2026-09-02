@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora-minimal:40-x86_64
+FROM registry.fedoraproject.org/fedora-minimal:46-x86_64
 
 EXPOSE 8080/tcp
 
