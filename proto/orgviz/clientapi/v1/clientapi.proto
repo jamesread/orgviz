@@ -4,14 +4,16 @@ package clientapi;
 
 option go_package = "github.com/jamesread/orgviz/gen/orgviz/clientapi/v1;clientapi";
 
+// ClientToFrontend is the browser-facing API for listing and rendering charts.
 service ClientToFrontend {
+	// getClientInitialSettings returns the app version and available org charts.
 	rpc getClientInitialSettings(GetClientInitialSettingsRequest) returns (GetClientInitialSettingsResponse);
 
+	// getChart returns one organisation chart and its people.
 	rpc getChart(GetChartRequest) returns (GetChartResponse);
 }
 
 message GetClientInitialSettingsRequest {
-
 }
 
 message GetClientInitialSettingsResponse {
@@ -38,6 +40,6 @@ message Person {
 }
 
 message ChartInfo {
-    string chartId = 1;
+	string chartId = 1;
 	string title = 2;
 }

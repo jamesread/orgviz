@@ -35,7 +35,7 @@ dockers:
       - "--label=org.opencontainers.image.version={{.Tag}}"
     extra_files:
       - README.md
-      - frontend-dist
+      - frontend/dist
       - var/config-skel/
 
   - dockerfile: Dockerfile
@@ -51,7 +51,7 @@ dockers:
       - "--label=org.opencontainers.image.version={{.Tag}}"
     extra_files:
       - README.md
-      - frontend-dist
+      - frontend/dist
       - var/config-skel/
 
 docker_manifests:

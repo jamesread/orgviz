@@ -1,3 +1,22 @@
 = orgviz
 
 **Organize and Visualize people**
+
+== Screenshots
+
+.Org chart
+image::marketing/home.png[Org chart]
+
+An interactive org chart for Example Company, with names, job titles and avatars, so reporting lines are visible at a glance.
+
+.Switch charts
+image::marketing/second-company.png[Switch charts]
+
+Switch between organisation files from the header, so one orgviz instance can show several teams or companies.
+
+.Dark mode
+image::marketing/home-dark.png[Dark mode]
+
+The same org chart in a dark colour scheme that follows the browser preference, easier on the eyes in low light.
+
+Screenshots use fictional data and are regenerated with `make screenshots` (see https://github.com/jamesread/orgviz/tree/main/var/marketing/screenshots[var/marketing/screenshots]).

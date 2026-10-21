@@ -5,6 +5,9 @@ htmlcov
 .coverage
 README.html
 /frontend-dist
+/frontend/dist
 /build
 service/orgviz
 **/*.log
+var/marketing/screenshots/tmp/
+dist

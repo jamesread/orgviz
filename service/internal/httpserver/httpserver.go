@@ -1,45 +1,65 @@
 package httpserver
 
 import (
-	"github.com/jamesread/orgviz/internal/config"
-	"github.com/jamesread/orgviz/internal/clientapi"
-	"github.com/jamesread/orgviz/gen/orgviz/clientapi/v1/clientapiconnect"
-
-	connectcors "connectrpc.com/cors"
-
-	"fmt"
-
-	"github.com/rs/cors"
-
-	"path/filepath"
 	"net/http"
 	"os"
+	"path/filepath"
+	"strings"
 
+	connectcors "connectrpc.com/cors"
+	"github.com/jamesread/orgviz/gen/orgviz/clientapi/v1/clientapiconnect"
+	"github.com/jamesread/orgviz/internal/clientapi"
+	"github.com/jamesread/orgviz/internal/config"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/rs/cors"
 	log "github.com/sirupsen/logrus"
 )
 
-func withCors(h http.Handler) http.Handler {
+func withCors(handler http.Handler) http.Handler {
 	mw := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowedMethods:   connectcors.AllowedMethods(),
-		AllowedHeaders:   connectcors.AllowedHeaders(),
-		ExposedHeaders:   connectcors.ExposedHeaders(),
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: connectcors.AllowedMethods(),
+		AllowedHeaders: connectcors.AllowedHeaders(),
+		ExposedHeaders: connectcors.ExposedHeaders(),
 	})
 
-	return mw.Handler(h)
+	return mw.Handler(handler)
 }
 
-func getNewApiHandler(cfg *config.Config) (string, http.Handler) {
-	apiServer := clientapi.NewServer()
+func listenAddr(cfg *config.Config) string {
+	if addr := strings.TrimSpace(os.Getenv("ORGVIZ_LISTEN")); addr != "" {
+		return addr
+	}
 
-	path, handler := clientapiconnect.NewClientToFrontendHandler(apiServer)
+	port := "8080"
+	if cfg != nil && cfg.Port != "" {
+		port = cfg.Port
+	}
 
-	return path, withCors(handler)
+	return ":" + port
+}
+
+func findFirstExistingDirectory(name string, directoriesToSearch []string) string {
+	for _, dir := range directoriesToSearch {
+		if info, err := os.Stat(dir); err == nil && info.IsDir() {
+			absdir, _ := filepath.Abs(dir)
+			log.WithFields(log.Fields{"dir": dir, "absdir": absdir}).Infof("Found the %v directory", name)
+			return absdir
+		}
+	}
+
+	log.Warnf("Did not find the %v directory, you will probably get 404 errors.", name)
+	return "./null/"
 }
 
 func findWebuiDir() string {
+	if envDir := strings.TrimSpace(os.Getenv("ORGVIZ_FRONTEND_DIR")); envDir != "" {
+		return envDir
+	}
+
 	return findFirstExistingDirectory("webui", []string{
 		"../frontend/dist/",
+		"../frontend-dist/",
 		"../frontend/",
 		"/frontend/",
 		"/usr/share/orgviz/frontend/",
@@ -48,64 +68,45 @@ func findWebuiDir() string {
 	})
 }
 
-func findFirstExistingDirectory(name string, directoriesToSearch []string) string {
-	for _, dir := range directoriesToSearch {
-		if _, err := os.Stat(dir); !os.IsNotExist(err) {
-			absdir, _ := filepath.Abs(dir)
-
-			log.WithFields(log.Fields{
-				"dir": dir,
-				"absdir": absdir,
-			}).Infof("Found the %v directory", name)
-
-			return absdir
-		}
-	}
-
-	log.Warnf("Did not find the %v directory, you will probably get 404 errors.", name)
-
-	return "./null/" // Should not exist
-}
-
-func findAvatarDir() string {
-	return findFirstExistingDirectory("avatars", []string{
+func findAvatarDir(cfg *config.Config) string {
+	candidates := []string{
 		"../var/config-skel/avatars/",
 		"/config/avatars/",
 		"/usr/share/orgviz/avatars/",
 		"/var/www/orgviz/avatars/",
 		"/etc/orgviz/avatars/",
-	})
+	}
+
+	if cfg != nil && cfg.AvatarsDir() != "" {
+		candidates = append([]string{cfg.AvatarsDir()}, candidates...)
+	}
+
+	return findFirstExistingDirectory("avatars", candidates)
 }
 
-func getNewWebUIHandler(dir string) http.Handler {
-	return http.FileServer(http.Dir(dir))
-}
-
-func Start(cfg *config.Config) {
-	const port = 8080
-
-	log.WithFields(log.Fields{
-		"port": port,
-	}).Info("Starting HTTP server")
-
-	apipath, apihandler := getNewApiHandler(cfg)
-
-	log.Infof("API path: %s", apipath)
+func newMux(cfg *config.Config) *http.ServeMux {
+	apiPath, apiHandler := clientapiconnect.NewClientToFrontendHandler(clientapi.NewServer(cfg))
 
 	mux := http.NewServeMux()
-
-	mux.HandleFunc("/api"+apipath, func(w http.ResponseWriter, r *http.Request) {
+	mux.Handle("/metrics", promhttp.Handler())
+	mux.HandleFunc("/api"+apiPath, func(w http.ResponseWriter, r *http.Request) {
 		log.Infof("API request: %s", r.URL.Path)
-
-		http.StripPrefix("/api", apihandler).ServeHTTP(w, r)
+		http.StripPrefix("/api", withCors(apiHandler)).ServeHTTP(w, r)
 	})
+	mux.Handle("/avatars/", http.StripPrefix("/avatars/", http.FileServer(http.Dir(findAvatarDir(cfg)))))
+	mux.Handle("/", spaHandler(findWebuiDir()))
 
-	mux.Handle("/avatars/", http.StripPrefix("/avatars/", http.FileServer(http.Dir(findAvatarDir()))))
-	mux.Handle("/", getNewWebUIHandler(findWebuiDir()))
+	return mux
+}
+
+// Start serves the API, avatars, metrics, and web UI.
+func Start(cfg *config.Config) {
+	addr := listenAddr(cfg)
+	log.WithField("addr", addr).Info("Starting HTTP server")
 
 	srv := &http.Server{
-		Addr:    fmt.Sprintf("0.0.0.0:%v", port),
-		Handler: mux,
+		Addr:    addr,
+		Handler: newMux(cfg),
 	}
 
 	log.Fatal(srv.ListenAndServe())

@@ -1,53 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <link rel="stylesheet" type="text/css" href="resources/stylesheets/style.css"/>
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>orgviz</title>
-
-    <meta charset="UTF-8"/>
-
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-	<link rel="icon" href="resources/images/logo.png" type="image/png"/>
-	<link rel="shortcut icon" href="resources/images/logo.png" type="image/png"/>
+    <link rel="icon" href="/logo.png" type="image/png" />
   </head>
   <body>
-    <header>
-	  <div class = "logo-and-title">
-		  <img src = "resources/images/logo.png" class = "logo" />
-
-		  <h1>orgviz</h1>
-	  </div>
-
-	  <nav class = "fg1">
-		  <ul id = "charts-list">
-
-		  </ul>
-	  </nav>
-
-	  <nav>
-		  <ul>
-			<li><a href="https://jamesread.github.io/orgviz/" target="_new">docs</a></li>
-			<li><a href="http://github.com/jamesread/orgviz/" target="_new" class = "right">GitHub repo</a></li>
-		  </ul>
-	  </nav>
-    </header>
-    <main>
-		<div class = "toolbar" style = "text-align: right;">
-			<button id = "change-layout">Expand Layout</button>
-		</div>
-		<div id="chart">Loading... </div>
-    </main>
-
-	<footer>
-		<span id = "current-version">?</span>
-	</footer>
-
-    <script type = "module">
-		import { init } from './resources/javascript/main.js';
-
-		init()
-	</script>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
   </body>
 </html>

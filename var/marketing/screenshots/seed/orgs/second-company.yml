@@ -1,0 +1,16 @@
+# Fictional marketing seed. A smaller second org so the header chart switcher
+# has more than one item. Names match committed seed avatars.
+title: Second Company
+
+people:
+  - name: Alice
+    title: CEO
+    alias: ali
+
+  - name: Bob
+    title: Founder
+    reports: Alice
+
+  - name: Charles
+    title: CFO
+    reports: Alice

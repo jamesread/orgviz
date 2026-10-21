@@ -9,4 +9,4 @@ plugins:
     opt: paths=source_relative
 
   - remote: buf.build/bufbuild/es
-    out: ../frontend/resources/javascript/gen/proto/
+    out: ../frontend/src/gen/proto/

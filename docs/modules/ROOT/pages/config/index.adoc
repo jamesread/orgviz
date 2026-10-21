@@ -17,4 +17,5 @@ logLevel: info
 | `configVersion` | The version of the configuration file. | 1 | No | ---
 | `logLevel`      | The log level to use. | info            | Yes                      | One of `debug`, `info`, `warn`, `error`.
 | `showFooter`    | Whether to show the footer in the web UI. | true           | No                      | ---
+| `listenPort`    | HTTP port when `PORT` is unset. | 8080 | No | Overridden by the `PORT` environment variable. |
 |===

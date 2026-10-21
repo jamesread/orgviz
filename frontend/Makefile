@@ -1,10 +1,20 @@
-default: deps prod
+.PHONY: all deps build preview test lint prod
+
+all: build
 
 deps:
 	npm install
 
-prod:
-	npx vite build --outDir ../frontend-dist --emptyOutDir
+build: deps
+	npx vite build
 
-parcel:
-	node_modules/.bin/parcel build src/index.pug --public-url "/webui/"
+prod: build
+
+preview:
+	npx vite preview
+
+test:
+	npm run test
+
+lint:
+	npm run lint

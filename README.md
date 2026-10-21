@@ -8,12 +8,31 @@
 
 </div>
 
-## Screenshots
-
-![Screenshot 1](var/marketing/screenshot1.png)
-
 orgviz v2 renders to a web interface.
 orgviz v1 renders to a static image, such as a PNG or SVG.
+
+## Screenshots
+
+### Org chart
+
+![Org chart](var/marketing/screenshots/home.png)
+
+An interactive org chart for Example Company, with names, job titles and avatars, so reporting lines are visible at a glance.
+
+### Switch charts
+
+![Switch charts](var/marketing/screenshots/second-company.png)
+
+Switch between organisation files from the header, so one orgviz instance can show several teams or companies.
+
+### Dark mode
+
+![Dark mode](var/marketing/screenshots/home-dark.png)
+
+The same org chart in a dark colour scheme that follows the browser preference, easier on the eyes in low light.
+
+Screenshots use fictional test data and are regenerated with `make screenshots`
+(see [`var/marketing/screenshots`](var/marketing/screenshots/README.md)).
 
 ## Getting started
 
