@@ -7,7 +7,8 @@ version: 2
 builds:
   - id: orgviz
     dir: service
-    main: main.go
+    # The service package, not main.go alone, so embed.go is compiled in.
+    main: .
     binary: orgviz
     env: [CGO_ENABLED=0]
     goos: [linux]
