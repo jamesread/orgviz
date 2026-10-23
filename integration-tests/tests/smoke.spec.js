@@ -22,8 +22,8 @@ describe('orgviz smoke', function () {
 
   it('renders the Example Company chart', async function () {
     await driver.get(base + '/')
-    await driver.wait(until.elementLocated(By.css('#charts-list')), 10000)
-    const nav = await driver.findElement(By.css('#charts-list')).getText()
+    await driver.wait(until.elementLocated(By.css('#picocrank-sidebar')), 10000)
+    const nav = await driver.findElement(By.css('#picocrank-sidebar')).getText()
     assert.match(nav, /Example Company/)
     await driver.wait(until.elementLocated(By.css('div.person')), 10000)
     const people = await driver.findElements(By.css('div.person'))
@@ -32,10 +32,10 @@ describe('orgviz smoke', function () {
     assert.match(body, /Alice Smith/)
   })
 
-  it('switches to Second Company from the header', async function () {
+  it('switches to Second Company from the sidebar', async function () {
     await driver.get(base + '/')
-    await driver.wait(until.elementLocated(By.css('#charts-list a')), 10000)
-    const links = await driver.findElements(By.css('#charts-list a'))
+    await driver.wait(until.elementLocated(By.css('#picocrank-sidebar a')), 10000)
+    const links = await driver.findElements(By.css('#picocrank-sidebar a'))
     const second = await Promise.all(links.map(async (link) => {
       const text = await link.getText()
       return text.includes('Second Company') ? link : null

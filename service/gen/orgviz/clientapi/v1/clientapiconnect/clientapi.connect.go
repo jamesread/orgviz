@@ -39,12 +39,29 @@ const (
 	// ClientToFrontendGetChartProcedure is the fully-qualified name of the ClientToFrontend's getChart
 	// RPC.
 	ClientToFrontendGetChartProcedure = "/clientapi.ClientToFrontend/getChart"
+	// ClientToFrontendPreviewChartProcedure is the fully-qualified name of the ClientToFrontend's
+	// previewChart RPC.
+	ClientToFrontendPreviewChartProcedure = "/clientapi.ClientToFrontend/previewChart"
+	// ClientToFrontendListThemesProcedure is the fully-qualified name of the ClientToFrontend's
+	// listThemes RPC.
+	ClientToFrontendListThemesProcedure = "/clientapi.ClientToFrontend/listThemes"
+	// ClientToFrontendSaveThemeProcedure is the fully-qualified name of the ClientToFrontend's
+	// saveTheme RPC.
+	ClientToFrontendSaveThemeProcedure = "/clientapi.ClientToFrontend/saveTheme"
 )
 
 // ClientToFrontendClient is a client for the clientapi.ClientToFrontend service.
 type ClientToFrontendClient interface {
+	// getClientInitialSettings returns the app version and available org charts.
 	GetClientInitialSettings(context.Context, *connect.Request[v1.GetClientInitialSettingsRequest]) (*connect.Response[v1.GetClientInitialSettingsResponse], error)
+	// getChart returns one organisation chart and its people.
 	GetChart(context.Context, *connect.Request[v1.GetChartRequest]) (*connect.Response[v1.GetChartResponse], error)
+	// previewChart parses org YAML without saving it, for the editor pane.
+	PreviewChart(context.Context, *connect.Request[v1.PreviewChartRequest]) (*connect.Response[v1.PreviewChartResponse], error)
+	// listThemes returns the shared themes that can be applied to a chart.
+	ListThemes(context.Context, *connect.Request[v1.ListThemesRequest]) (*connect.Response[v1.ListThemesResponse], error)
+	// saveTheme creates or replaces a shared theme in the themes directory.
+	SaveTheme(context.Context, *connect.Request[v1.SaveThemeRequest]) (*connect.Response[v1.SaveThemeResponse], error)
 }
 
 // NewClientToFrontendClient constructs a client for the clientapi.ClientToFrontend service. By
@@ -70,6 +87,24 @@ func NewClientToFrontendClient(httpClient connect.HTTPClient, baseURL string, op
 			connect.WithSchema(clientToFrontendMethods.ByName("getChart")),
 			connect.WithClientOptions(opts...),
 		),
+		previewChart: connect.NewClient[v1.PreviewChartRequest, v1.PreviewChartResponse](
+			httpClient,
+			baseURL+ClientToFrontendPreviewChartProcedure,
+			connect.WithSchema(clientToFrontendMethods.ByName("previewChart")),
+			connect.WithClientOptions(opts...),
+		),
+		listThemes: connect.NewClient[v1.ListThemesRequest, v1.ListThemesResponse](
+			httpClient,
+			baseURL+ClientToFrontendListThemesProcedure,
+			connect.WithSchema(clientToFrontendMethods.ByName("listThemes")),
+			connect.WithClientOptions(opts...),
+		),
+		saveTheme: connect.NewClient[v1.SaveThemeRequest, v1.SaveThemeResponse](
+			httpClient,
+			baseURL+ClientToFrontendSaveThemeProcedure,
+			connect.WithSchema(clientToFrontendMethods.ByName("saveTheme")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -77,6 +112,9 @@ func NewClientToFrontendClient(httpClient connect.HTTPClient, baseURL string, op
 type clientToFrontendClient struct {
 	getClientInitialSettings *connect.Client[v1.GetClientInitialSettingsRequest, v1.GetClientInitialSettingsResponse]
 	getChart                 *connect.Client[v1.GetChartRequest, v1.GetChartResponse]
+	previewChart             *connect.Client[v1.PreviewChartRequest, v1.PreviewChartResponse]
+	listThemes               *connect.Client[v1.ListThemesRequest, v1.ListThemesResponse]
+	saveTheme                *connect.Client[v1.SaveThemeRequest, v1.SaveThemeResponse]
 }
 
 // GetClientInitialSettings calls clientapi.ClientToFrontend.getClientInitialSettings.
@@ -89,10 +127,33 @@ func (c *clientToFrontendClient) GetChart(ctx context.Context, req *connect.Requ
 	return c.getChart.CallUnary(ctx, req)
 }
 
+// PreviewChart calls clientapi.ClientToFrontend.previewChart.
+func (c *clientToFrontendClient) PreviewChart(ctx context.Context, req *connect.Request[v1.PreviewChartRequest]) (*connect.Response[v1.PreviewChartResponse], error) {
+	return c.previewChart.CallUnary(ctx, req)
+}
+
+// ListThemes calls clientapi.ClientToFrontend.listThemes.
+func (c *clientToFrontendClient) ListThemes(ctx context.Context, req *connect.Request[v1.ListThemesRequest]) (*connect.Response[v1.ListThemesResponse], error) {
+	return c.listThemes.CallUnary(ctx, req)
+}
+
+// SaveTheme calls clientapi.ClientToFrontend.saveTheme.
+func (c *clientToFrontendClient) SaveTheme(ctx context.Context, req *connect.Request[v1.SaveThemeRequest]) (*connect.Response[v1.SaveThemeResponse], error) {
+	return c.saveTheme.CallUnary(ctx, req)
+}
+
 // ClientToFrontendHandler is an implementation of the clientapi.ClientToFrontend service.
 type ClientToFrontendHandler interface {
+	// getClientInitialSettings returns the app version and available org charts.
 	GetClientInitialSettings(context.Context, *connect.Request[v1.GetClientInitialSettingsRequest]) (*connect.Response[v1.GetClientInitialSettingsResponse], error)
+	// getChart returns one organisation chart and its people.
 	GetChart(context.Context, *connect.Request[v1.GetChartRequest]) (*connect.Response[v1.GetChartResponse], error)
+	// previewChart parses org YAML without saving it, for the editor pane.
+	PreviewChart(context.Context, *connect.Request[v1.PreviewChartRequest]) (*connect.Response[v1.PreviewChartResponse], error)
+	// listThemes returns the shared themes that can be applied to a chart.
+	ListThemes(context.Context, *connect.Request[v1.ListThemesRequest]) (*connect.Response[v1.ListThemesResponse], error)
+	// saveTheme creates or replaces a shared theme in the themes directory.
+	SaveTheme(context.Context, *connect.Request[v1.SaveThemeRequest]) (*connect.Response[v1.SaveThemeResponse], error)
 }
 
 // NewClientToFrontendHandler builds an HTTP handler from the service implementation. It returns the
@@ -114,12 +175,36 @@ func NewClientToFrontendHandler(svc ClientToFrontendHandler, opts ...connect.Han
 		connect.WithSchema(clientToFrontendMethods.ByName("getChart")),
 		connect.WithHandlerOptions(opts...),
 	)
+	clientToFrontendPreviewChartHandler := connect.NewUnaryHandler(
+		ClientToFrontendPreviewChartProcedure,
+		svc.PreviewChart,
+		connect.WithSchema(clientToFrontendMethods.ByName("previewChart")),
+		connect.WithHandlerOptions(opts...),
+	)
+	clientToFrontendListThemesHandler := connect.NewUnaryHandler(
+		ClientToFrontendListThemesProcedure,
+		svc.ListThemes,
+		connect.WithSchema(clientToFrontendMethods.ByName("listThemes")),
+		connect.WithHandlerOptions(opts...),
+	)
+	clientToFrontendSaveThemeHandler := connect.NewUnaryHandler(
+		ClientToFrontendSaveThemeProcedure,
+		svc.SaveTheme,
+		connect.WithSchema(clientToFrontendMethods.ByName("saveTheme")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/clientapi.ClientToFrontend/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case ClientToFrontendGetClientInitialSettingsProcedure:
 			clientToFrontendGetClientInitialSettingsHandler.ServeHTTP(w, r)
 		case ClientToFrontendGetChartProcedure:
 			clientToFrontendGetChartHandler.ServeHTTP(w, r)
+		case ClientToFrontendPreviewChartProcedure:
+			clientToFrontendPreviewChartHandler.ServeHTTP(w, r)
+		case ClientToFrontendListThemesProcedure:
+			clientToFrontendListThemesHandler.ServeHTTP(w, r)
+		case ClientToFrontendSaveThemeProcedure:
+			clientToFrontendSaveThemeHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -135,4 +220,16 @@ func (UnimplementedClientToFrontendHandler) GetClientInitialSettings(context.Con
 
 func (UnimplementedClientToFrontendHandler) GetChart(context.Context, *connect.Request[v1.GetChartRequest]) (*connect.Response[v1.GetChartResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("clientapi.ClientToFrontend.getChart is not implemented"))
+}
+
+func (UnimplementedClientToFrontendHandler) PreviewChart(context.Context, *connect.Request[v1.PreviewChartRequest]) (*connect.Response[v1.PreviewChartResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("clientapi.ClientToFrontend.previewChart is not implemented"))
+}
+
+func (UnimplementedClientToFrontendHandler) ListThemes(context.Context, *connect.Request[v1.ListThemesRequest]) (*connect.Response[v1.ListThemesResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("clientapi.ClientToFrontend.listThemes is not implemented"))
+}
+
+func (UnimplementedClientToFrontendHandler) SaveTheme(context.Context, *connect.Request[v1.SaveThemeRequest]) (*connect.Response[v1.SaveThemeResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("clientapi.ClientToFrontend.saveTheme is not implemented"))
 }

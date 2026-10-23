@@ -11,6 +11,15 @@ service ClientToFrontend {
 
 	// getChart returns one organisation chart and its people.
 	rpc getChart(GetChartRequest) returns (GetChartResponse);
+
+	// previewChart parses org YAML without saving it, for the editor pane.
+	rpc previewChart(PreviewChartRequest) returns (PreviewChartResponse);
+
+	// listThemes returns the shared themes that can be applied to a chart.
+	rpc listThemes(ListThemesRequest) returns (ListThemesResponse);
+
+	// saveTheme creates or replaces a shared theme in the themes directory.
+	rpc saveTheme(SaveThemeRequest) returns (SaveThemeResponse);
 }
 
 message GetClientInitialSettingsRequest {
@@ -19,6 +28,7 @@ message GetClientInitialSettingsRequest {
 message GetClientInitialSettingsResponse {
 	string version = 1;
 	repeated ChartInfo charts = 2;
+	repeated ThemeInfo themes = 3;
 }
 
 message GetChartRequest {
@@ -29,6 +39,52 @@ message GetChartResponse {
 	string chartId = 1;
 	string title = 2;
 	repeated Person people = 3;
+	string source = 4;
+	ChartStyle style = 5;
+}
+
+message PreviewChartRequest {
+	string source = 1;
+}
+
+message PreviewChartResponse {
+	string title = 1;
+	repeated Person people = 2;
+	ChartStyle style = 3;
+}
+
+// ChartStyle is the chart's `style:` block, with defaults filled in.
+message ChartStyle {
+	string css = 1;
+	bool show_avatars = 2;
+	bool show_job_titles = 3;
+	bool show_team = 4;
+	bool show_expand_buttons = 5;
+	string background_color = 6;
+	string theme = 7;
+	bool compact = 8;
+}
+
+message ThemeInfo {
+	string theme_id = 1;
+	string title = 2;
+}
+
+message ListThemesRequest {
+}
+
+message ListThemesResponse {
+	repeated ThemeInfo themes = 1;
+}
+
+message SaveThemeRequest {
+	string theme_id = 1;
+	string title = 2;
+	ChartStyle style = 3;
+}
+
+message SaveThemeResponse {
+	ThemeInfo theme = 1;
 }
 
 message Person {
@@ -37,6 +93,7 @@ message Person {
 	string full_name = 3;
 	string job_title = 4;
 	string avatar_url = 5;
+	string team = 6;
 }
 
 message ChartInfo {

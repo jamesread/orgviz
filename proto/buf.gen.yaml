@@ -10,3 +10,10 @@ plugins:
 
   - remote: buf.build/bufbuild/es
     out: ../frontend/src/gen/proto/
+
+  - remote: buf.build/community/sudorandom-connect-openapi:v0.22.1
+    out: ../service/gen
+    opt:
+      - format=json
+      - path=openapi.json
+      - path-prefix=/api

@@ -2,6 +2,15 @@
 
 All configuration of orgviz is via a configuration file called `config.yaml`. When running orgviz via Docker, this file is located in the `/config` directory.
 
+orgviz uses the first config directory it finds, in this order:
+
+. The directory given with `-configdir`.
+. The `ORGVIZ_CONFIGDIR` environment variable.
+. `/config`, which is where the Docker image expects it.
+. `~/.config/orgviz/`, or `$XDG_CONFIG_HOME/orgviz/` when `XDG_CONFIG_HOME` is set.
+
+The same directory holds the `orgs/` and `avatars/` directories. orgviz logs each `config.yaml` path it checks, and which one it loaded, when it starts.
+
 The configuration file can be created and edited using any text editor. The configuration file is in YAML format, which is a human-readable data serialization standard.
 
 The most basic `config.yaml` file cam be as simple as this:
@@ -18,4 +27,89 @@ logLevel: info
 | `logLevel`      | The log level to use. | info            | Yes                      | One of `debug`, `info`, `warn`, `error`.
 | `showFooter`    | Whether to show the footer in the web UI. | true           | No                      | ---
 | `listenPort`    | HTTP port when `PORT` is unset. | 8080 | No | Overridden by the `PORT` environment variable. |
+| `mcp.enabled`   | Serve the MCP server at `/mcp`, so AI assistants can create and edit charts. | false | No | Also turned on by `ORGVIZ_MCP_ENABLED=true`. See <<mcp>>. |
 |===
+
+== Previewing org file changes in the browser
+
+Each chart's org file can be edited from the web UI. Click **Edit YAML** in the toolbar to open a side pane with the chart's YAML. The chart re-renders as you type, and if the YAML does not parse, the error is shown under the editor while the last valid chart stays on screen.
+
+Chart YAML in the editor is a preview only. Org files mounted read-only are safe. To keep chart changes, click **Download** and replace the file in your `orgs` directory. **Reset** returns the editor to the file as the server loaded it. Shared themes are saved on the server; see <<themes>>.
+
+To save the chart as an image, click **Export PNG** next to **Recenter**. The image shows the chart as it is on screen, including any theme and custom CSS, fitted to include every visible person. The page background is left transparent. Collapsed branches are left out, so expand them first if you want them in the image. An AI assistant can export a PNG of the chart with `orgviz_export_chart`.
+
+== Chart theme and style
+
+Each org file can have an optional `style:` block that changes how its cards and chart area look, for everyone viewing that chart. The **Theme and Style** tab in the editor pane edits this block with a shared theme picker, checkboxes, a background color control and a CSS box, and previews the result live.
+
+.orgs/ExampleCompany.yml
+[source,yaml]
+----
+title: Example Company
+style:
+  theme: ocean
+  backgroundColor: "#f8fafc"
+  features:
+    avatars: false
+    team: true
+  css: |
+    div.person {
+      border-top-color: teal;
+      border-radius: 12px;
+    }
+people:
+  - name: Alice Smith
+    title: CEO
+    team: Leadership
+----
+
+|===
+| Feature         | Description                                           | Default
+| `avatars`       | Show profile photos on cards.                         | true
+| `jobTitles`     | Show each person's `title`.                           | true
+| `team`          | Show each person's `team`.                            | false
+| `expandButtons` | Show the expand/collapse buttons. When off, the whole tree is shown expanded. | true
+| `compact`       | Draw reports side by side. When off, the tree is expanded.                    | true
+|===
+
+The `css` is added to the page as written. Cards use `div.person`, `img.avatar`, `.person h3`, `.person .job-title` and `.person .team`. Each card also has `level-0`, `level-1`, … for its layer in the tree (`level-0` is the root), so a whole layer can share a rule such as `div.person.level-1 { border-top-color: teal; }`. Chart-level `css`, `backgroundColor` and `features` override the shared theme when both are set.
+
+[#themes]
+== Shared themes
+
+A theme is a YAML file in the `themes` directory, such as `themes/ocean.yml`. Charts reuse it with `style.theme: ocean`. Changing the theme file updates every chart that names it.
+
+.themes/ocean.yml
+[source,yaml]
+----
+title: Ocean
+backgroundColor: "#f2f2f2"
+features:
+  team: true
+  expandButtons: false
+css: |
+  div.person { border-top-color: teal; }
+----
+
+From the **Theme and Style** tab, pick a theme in **Use theme**, or fill **Save as** and click **Save theme** to write the current look to the server. An AI assistant can create or update the same files with `orgviz_save_theme` and apply them with `orgviz_set_chart_style`.
+
+[#mcp]
+== MCP server for AI assistants
+
+orgviz can serve a https://modelcontextprotocol.io/[Model Context Protocol] server at `/mcp`. An AI assistant connected to it can create charts, write their YAML, export a PNG, upload profile photos, save shared themes and set the theme, and gives you a link to review each chart in the browser.
+
+The MCP server is off by default. Turn it on in `config.yaml`:
+
+[source,yaml]
+----
+mcp:
+  enabled: true
+----
+
+WARNING: The MCP server has no authentication. Anyone who can reach `/mcp` can create and replace org files, themes and upload images. Only enable it on a trusted network.
+
+Charts are saved in the `orgs` directory as `<chart ID>.yml`, photos in the `avatars` directory, and shared themes in the `themes` directory, so those directories must be writable. Changes are visible in the browser straight away, without a restart.
+
+To connect an assistant, point its MCP client at `http://<your orgviz host>/mcp` using the Streamable HTTP transport. The tools are listed in https://github.com/jamesread/orgviz/blob/main/AGENTS.md[AGENTS.md]. orgviz also publishes `/llms.txt` and an OpenAPI description of its API at `/openapi`.
+
+Charts are addressed by their file name, such as `/chart/ExampleCompany`. Older links that use a number, such as `/chart/0`, still work and move to the new address.

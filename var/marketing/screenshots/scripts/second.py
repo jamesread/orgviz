@@ -1,11 +1,11 @@
-"""Switches the header to the Second Company chart."""
+"""Switches the sidebar to the Second Company chart."""
 import time
 
 from selenium.webdriver.common.by import By
 
 
 def run(driver):
-    for link in driver.find_elements(By.CSS_SELECTOR, "#charts-list a"):
+    for link in driver.find_elements(By.CSS_SELECTOR, "#picocrank-sidebar a"):
         if "Second Company" in link.text:
             link.click()
             break

@@ -1,0 +1,23 @@
+# orgviz
+
+> Organisation charts drawn from YAML files. Read charts through the Connect RPC API and OpenAPI spec, or create and edit them through the MCP server.
+
+orgviz exposes machine-readable integration endpoints on the same base URL as the web application.
+
+The Connect RPC API is read-only and needs no authentication. The MCP server can create and change charts and upload avatar images. It is off unless the administrator sets `mcp.enabled: true` in config.yaml, and it has no authentication, so it is meant for trusted networks. Each MCP tool result includes the chart's browser URL so a person can review the chart.
+
+## API
+
+- [Connect RPC API](/api): orgviz Connect/gRPC-over-HTTP API for listing, reading and previewing charts (prefix `/api`)
+- [OpenAPI spec](/openapi): OpenAPI 3.1 JSON description of the Connect RPC API
+
+## MCP
+
+- [MCP server](/mcp): Model Context Protocol (Streamable HTTP) endpoint for AI assistants and agents to create charts, edit their YAML and theme, export a PNG, save shared themes, and upload avatars
+
+## Documentation
+
+- [GitHub repository](https://github.com/jamesread/orgviz): Source code, issues, and releases
+- [README](https://github.com/jamesread/orgviz#readme): Project overview and setup
+- [AGENTS.md](https://github.com/jamesread/orgviz/blob/main/AGENTS.md): AI agent integration guide and MCP tool reference
+- [Documentation](https://jamesread.github.io/orgviz/): Installation and configuration

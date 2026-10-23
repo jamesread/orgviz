@@ -1,0 +1,657 @@
+{
+  "openapi": "3.1.0",
+  "info": {},
+  "paths": {
+    "/api/clientapi.ClientToFrontend/getChart": {
+      "post": {
+        "tags": [
+          "clientapi.ClientToFrontend"
+        ],
+        "summary": "getChart returns one organisation chart and its people.",
+        "description": "getChart returns one organisation chart and its people.",
+        "operationId": "clientapi.ClientToFrontend.getChart",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            }
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/clientapi.GetChartRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/clientapi.GetChartResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/clientapi.ClientToFrontend/getClientInitialSettings": {
+      "post": {
+        "tags": [
+          "clientapi.ClientToFrontend"
+        ],
+        "summary": "getClientInitialSettings returns the app version and available org charts.",
+        "description": "getClientInitialSettings returns the app version and available org charts.",
+        "operationId": "clientapi.ClientToFrontend.getClientInitialSettings",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            }
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/clientapi.GetClientInitialSettingsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/clientapi.GetClientInitialSettingsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/clientapi.ClientToFrontend/listThemes": {
+      "post": {
+        "tags": [
+          "clientapi.ClientToFrontend"
+        ],
+        "summary": "listThemes returns the shared themes that can be applied to a chart.",
+        "description": "listThemes returns the shared themes that can be applied to a chart.",
+        "operationId": "clientapi.ClientToFrontend.listThemes",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            }
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/clientapi.ListThemesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/clientapi.ListThemesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/clientapi.ClientToFrontend/previewChart": {
+      "post": {
+        "tags": [
+          "clientapi.ClientToFrontend"
+        ],
+        "summary": "previewChart parses org YAML without saving it, for the editor pane.",
+        "description": "previewChart parses org YAML without saving it, for the editor pane.",
+        "operationId": "clientapi.ClientToFrontend.previewChart",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            }
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/clientapi.PreviewChartRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/clientapi.PreviewChartResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/clientapi.ClientToFrontend/saveTheme": {
+      "post": {
+        "tags": [
+          "clientapi.ClientToFrontend"
+        ],
+        "summary": "saveTheme creates or replaces a shared theme in the themes directory.",
+        "description": "saveTheme creates or replaces a shared theme in the themes directory.",
+        "operationId": "clientapi.ClientToFrontend.saveTheme",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            }
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/clientapi.SaveThemeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/clientapi.SaveThemeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "clientapi.ChartInfo": {
+        "type": "object",
+        "properties": {
+          "chartId": {
+            "type": "string",
+            "title": "chartId"
+          },
+          "title": {
+            "type": "string",
+            "title": "title"
+          }
+        },
+        "title": "ChartInfo",
+        "additionalProperties": false
+      },
+      "clientapi.ChartStyle": {
+        "type": "object",
+        "properties": {
+          "css": {
+            "type": "string",
+            "title": "css"
+          },
+          "showAvatars": {
+            "type": "boolean",
+            "title": "show_avatars"
+          },
+          "showJobTitles": {
+            "type": "boolean",
+            "title": "show_job_titles"
+          },
+          "showTeam": {
+            "type": "boolean",
+            "title": "show_team"
+          },
+          "showExpandButtons": {
+            "type": "boolean",
+            "title": "show_expand_buttons"
+          },
+          "backgroundColor": {
+            "type": "string",
+            "title": "background_color"
+          },
+          "theme": {
+            "type": "string",
+            "title": "theme"
+          },
+          "compact": {
+            "type": "boolean",
+            "title": "compact"
+          }
+        },
+        "title": "ChartStyle",
+        "additionalProperties": false,
+        "description": "ChartStyle is the chart's `style:` block, with defaults filled in."
+      },
+      "clientapi.GetChartRequest": {
+        "type": "object",
+        "properties": {
+          "chartId": {
+            "type": "string",
+            "title": "chartId"
+          }
+        },
+        "title": "GetChartRequest",
+        "additionalProperties": false
+      },
+      "clientapi.GetChartResponse": {
+        "type": "object",
+        "properties": {
+          "chartId": {
+            "type": "string",
+            "title": "chartId"
+          },
+          "title": {
+            "type": "string",
+            "title": "title"
+          },
+          "people": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/clientapi.Person"
+            },
+            "title": "people"
+          },
+          "source": {
+            "type": "string",
+            "title": "source"
+          },
+          "style": {
+            "title": "style",
+            "$ref": "#/components/schemas/clientapi.ChartStyle"
+          }
+        },
+        "title": "GetChartResponse",
+        "additionalProperties": false
+      },
+      "clientapi.GetClientInitialSettingsRequest": {
+        "type": "object",
+        "title": "GetClientInitialSettingsRequest",
+        "additionalProperties": false
+      },
+      "clientapi.GetClientInitialSettingsResponse": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "title": "version"
+          },
+          "charts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/clientapi.ChartInfo"
+            },
+            "title": "charts"
+          },
+          "themes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/clientapi.ThemeInfo"
+            },
+            "title": "themes"
+          }
+        },
+        "title": "GetClientInitialSettingsResponse",
+        "additionalProperties": false
+      },
+      "clientapi.ListThemesRequest": {
+        "type": "object",
+        "title": "ListThemesRequest",
+        "additionalProperties": false
+      },
+      "clientapi.ListThemesResponse": {
+        "type": "object",
+        "properties": {
+          "themes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/clientapi.ThemeInfo"
+            },
+            "title": "themes"
+          }
+        },
+        "title": "ListThemesResponse",
+        "additionalProperties": false
+      },
+      "clientapi.Person": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "id",
+            "format": "int32"
+          },
+          "parentId": {
+            "type": "integer",
+            "title": "parentId",
+            "format": "int32"
+          },
+          "fullName": {
+            "type": "string",
+            "title": "full_name"
+          },
+          "jobTitle": {
+            "type": "string",
+            "title": "job_title"
+          },
+          "avatarUrl": {
+            "type": "string",
+            "title": "avatar_url"
+          },
+          "team": {
+            "type": "string",
+            "title": "team"
+          }
+        },
+        "title": "Person",
+        "additionalProperties": false
+      },
+      "clientapi.PreviewChartRequest": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "title": "source"
+          }
+        },
+        "title": "PreviewChartRequest",
+        "additionalProperties": false
+      },
+      "clientapi.PreviewChartResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "title"
+          },
+          "people": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/clientapi.Person"
+            },
+            "title": "people"
+          },
+          "style": {
+            "title": "style",
+            "$ref": "#/components/schemas/clientapi.ChartStyle"
+          }
+        },
+        "title": "PreviewChartResponse",
+        "additionalProperties": false
+      },
+      "clientapi.SaveThemeRequest": {
+        "type": "object",
+        "properties": {
+          "themeId": {
+            "type": "string",
+            "title": "theme_id"
+          },
+          "title": {
+            "type": "string",
+            "title": "title"
+          },
+          "style": {
+            "title": "style",
+            "$ref": "#/components/schemas/clientapi.ChartStyle"
+          }
+        },
+        "title": "SaveThemeRequest",
+        "additionalProperties": false
+      },
+      "clientapi.SaveThemeResponse": {
+        "type": "object",
+        "properties": {
+          "theme": {
+            "title": "theme",
+            "$ref": "#/components/schemas/clientapi.ThemeInfo"
+          }
+        },
+        "title": "SaveThemeResponse",
+        "additionalProperties": false
+      },
+      "clientapi.ThemeInfo": {
+        "type": "object",
+        "properties": {
+          "themeId": {
+            "type": "string",
+            "title": "theme_id"
+          },
+          "title": {
+            "type": "string",
+            "title": "title"
+          }
+        },
+        "title": "ThemeInfo",
+        "additionalProperties": false
+      },
+      "connect-protocol-version": {
+        "type": "number",
+        "title": "Connect-Protocol-Version",
+        "enum": [
+          1
+        ],
+        "description": "Define the version of the Connect protocol",
+        "const": 1
+      },
+      "connect-timeout-header": {
+        "type": "number",
+        "title": "Connect-Timeout-Ms",
+        "description": "Define the timeout, in ms"
+      },
+      "connect.error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "examples": [
+              "not_found"
+            ],
+            "enum": [
+              "canceled",
+              "unknown",
+              "invalid_argument",
+              "deadline_exceeded",
+              "not_found",
+              "already_exists",
+              "permission_denied",
+              "resource_exhausted",
+              "failed_precondition",
+              "aborted",
+              "out_of_range",
+              "unimplemented",
+              "internal",
+              "unavailable",
+              "data_loss",
+              "unauthenticated"
+            ],
+            "description": "The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code]."
+          },
+          "message": {
+            "type": "string",
+            "description": "A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client."
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/connect.error_details.Any"
+            },
+            "description": "A list of messages that carry the error details. There is no limit on the number of messages."
+          }
+        },
+        "title": "Connect Error",
+        "additionalProperties": true,
+        "description": "Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation"
+      },
+      "connect.error_details.Any": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field."
+          },
+          "value": {
+            "type": "string",
+            "format": "binary",
+            "description": "The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field."
+          },
+          "debug": {
+            "oneOf": [
+              {
+                "type": "object",
+                "title": "Any",
+                "additionalProperties": true,
+                "description": "Detailed error information."
+              }
+            ],
+            "discriminator": {
+              "propertyName": "type"
+            },
+            "title": "Debug",
+            "description": "Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic."
+          }
+        },
+        "additionalProperties": true,
+        "description": "Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details."
+      }
+    }
+  },
+  "security": [],
+  "tags": [
+    {
+      "name": "clientapi.ClientToFrontend",
+      "description": "ClientToFrontend is the browser-facing API for listing and rendering charts."
+    }
+  ]
+}

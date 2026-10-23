@@ -1,18 +1,21 @@
-#charts-list {
-  display: flex;
-  gap: 1em;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-#charts-list a.active {
-  text-decoration: underline;
-}
-
 main {
   flex-grow: 1;
   min-height: 0;
+  position: relative;
+}
+
+#chart-controls {
+  position: absolute;
+  left: 1em;
+  bottom: 1em;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: .5em;
+}
+
+#chart-controls .chart-control-status {
+  margin: 0;
 }
 
 #chart {
@@ -20,6 +23,9 @@ main {
 }
 
 div.person {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
   border: 1px solid #ccc;
   border-top: 4px solid purple;
   padding: .6em;
@@ -27,6 +33,24 @@ div.person {
   box-shadow: 0 0 5px rgba(0, 0, 0, .3);
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+#chart .person:hover {
+  outline: 2px solid var(--focus-outline-color, #4a90d9);
+  outline-offset: 1px;
+}
+
+#chart .person.selected {
+  outline: 3px solid var(--focus-outline-color, #4a90d9);
+  outline-offset: 1px;
+  box-shadow: 0 0 0 1px var(--focus-outline-color, #4a90d9), 0 0 8px rgba(0, 0, 0, .25);
+}
+
+div.person .person-info {
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 div.person h3 {
@@ -34,9 +58,16 @@ div.person h3 {
   margin-bottom: .2em;
 }
 
+div.person h3,
+div.person .job-title,
+div.person .team {
+  overflow-wrap: anywhere;
+}
+
 img.avatar {
   width: 80px;
   height: 80px;
+  flex-shrink: 0;
   border-radius: 50%;
   margin-right: 1em;
 }
@@ -46,4 +77,224 @@ img.avatar {
   background-color: #383030;
   border: 1px solid #444;
   border-top: 4px solid #a0a;
+}
+
+main.editing {
+  display: flex;
+  gap: 1em;
+  align-items: stretch;
+}
+
+main.editing #chart {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+#editor-pane {
+  flex: 0 0 32em;
+  max-width: 45%;
+  display: flex;
+  flex-direction: column;
+  gap: .5em;
+  min-height: 70vh;
+  max-height: calc(100vh - 8em);
+  position: sticky;
+  top: 1em;
+}
+
+#editor-pane .editor-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5em;
+}
+
+
+#editor-pane textarea {
+  flex: 1 1 auto;
+  min-height: 20em;
+  resize: none;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: .9em;
+  line-height: 1.4;
+  tab-size: 2;
+  white-space: pre;
+}
+
+#editor-pane .editor-status {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+#editor-pane .editor-note {
+  margin: 0;
+  font-size: .85em;
+  opacity: .75;
+}
+
+@media (max-width: 800px) {
+  main.editing {
+    flex-direction: column;
+  }
+
+  #editor-pane {
+    flex-basis: auto;
+    max-width: none;
+    max-height: none;
+    position: static;
+  }
+}
+
+div.person p.team {
+  margin: .2em 0 0;
+  font-size: .85em;
+  opacity: .75;
+}
+
+#chart.no-expand-buttons .node-button-g {
+  display: none;
+}
+
+#editor-pane .editor-tabs {
+  display: flex;
+  gap: .25em;
+}
+
+#editor-pane .editor-tabs button {
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  color: inherit;
+  padding: .3em .5em;
+}
+
+#editor-pane .editor-tabs button.active {
+  border-bottom-color: currentColor;
+  font-weight: bold;
+}
+
+#editor-pane .theme-library {
+  display: flex;
+  flex-direction: column;
+  gap: .4em;
+}
+
+#editor-pane .theme-select,
+#editor-pane .theme-save {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5em;
+}
+
+#editor-pane .theme-select select {
+  flex: 1 1 10em;
+  min-width: 0;
+}
+
+#editor-pane .theme-save input {
+  flex: 1 1 8em;
+  min-width: 0;
+  padding: .5em .6em;
+}
+
+#editor-pane .theme-style-tab {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: .5em;
+  min-height: 0;
+}
+
+#editor-pane fieldset {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .25em 1em;
+  margin: 0;
+}
+
+#editor-pane .chart-features {
+  display: flex;
+  flex-direction: column;
+  gap: .5em;
+}
+
+#editor-pane .feature-checks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .25em 1em;
+}
+
+#editor-pane .feature-checks label,
+#editor-pane fieldset > label {
+  display: flex;
+  align-items: center;
+  gap: .4em;
+}
+
+#editor-pane .layout-feature {
+  display: flex;
+  flex-direction: column;
+  gap: .4em;
+}
+
+#editor-pane .color-field {
+  display: flex;
+  align-items: center;
+  gap: .5em;
+}
+
+#editor-pane .color-field input[type="color"] {
+  width: 2.5em;
+  height: 2.5em;
+  padding: .2em;
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+
+#editor-pane .color-field input[type="text"] {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: .5em .6em;
+}
+
+#editor-pane .css-dialog {
+  width: min(56em, calc(100vw - 2em));
+  height: min(40em, calc(100vh - 4em));
+  padding: 0;
+}
+
+#editor-pane .css-dialog::backdrop {
+  background: rgba(0, 0, 0, .4);
+}
+
+#editor-pane .css-dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: .75em;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 1em;
+}
+
+#editor-pane .css-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#editor-pane .css-dialog-body h2 {
+  margin: 0;
+  font-size: 1.2em;
+}
+
+#editor-pane .css-dialog textarea {
+  min-height: 0;
+}
+
+#editor-pane .editor-actions {
+  display: flex;
+  gap: .5em;
 }

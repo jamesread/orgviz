@@ -3,7 +3,9 @@ package orgs
 import (
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	log "github.com/sirupsen/logrus"
@@ -12,8 +14,14 @@ import (
 
 // File is one organisation chart loaded from YAML.
 type File struct {
+	// ID is the file name without its extension, used in chart URLs.
+	ID     string `yaml:"-"`
 	Title  string
+	Style  Style
 	People []*Person
+
+	// Source is the YAML the file was parsed from, shown in the editor pane.
+	Source string `yaml:"-"`
 
 	peopleIDs map[string]int32
 }
@@ -25,6 +33,7 @@ type Person struct {
 	Title      string
 	Team       string
 	Reports    string
+	Avatar     string
 	Attributes map[string]string
 
 	ID          int32
@@ -38,6 +47,7 @@ func Parse(contents []byte) (*File, error) {
 		return nil, fmt.Errorf("parsing org file: %w", err)
 	}
 
+	parsed.Source = string(contents)
 	assignPeopleIDs(parsed)
 	linkPeopleIDs(parsed)
 
@@ -73,6 +83,8 @@ func loadFile(filename string) (*File, error) {
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", filename, err)
 	}
+
+	org.ID = strings.TrimSuffix(filepath.Base(filename), filepath.Ext(filename))
 
 	log.WithFields(log.Fields{
 		"file":   filename,
@@ -123,6 +135,31 @@ func linkPeopleIDs(org *File) {
 	}
 }
 
+// Warnings lists problems that still parse but probably are not intended, such
+// as a `reports` value that matches nobody. Those people are shown under the
+// first person in the chart.
+func (org *File) Warnings() []string {
+	warnings := []string{}
+
+	for _, person := range org.People {
+		if person.Reports != "" && person.ReportsToID == 0 {
+			warnings = append(warnings, fmt.Sprintf("%s reports to %q, which matches no name or alias", person.Name, person.Reports))
+		}
+	}
+
+	return warnings
+}
+
+// AvatarURL is /avatars/<avatar> when the person has an avatar file, and
+// otherwise the first-name guess from the package AvatarURL.
+func (person *Person) AvatarURL() string {
+	if person.Avatar == "" {
+		return AvatarURL(person.Name)
+	}
+
+	return "/avatars/" + path.Base(person.Avatar)
+}
+
 // AvatarURL is /avatars/<first-name>.jpg, using the first token of the name.
 func AvatarURL(name string) string {
 	name = strings.TrimSpace(name)
@@ -132,4 +169,11 @@ func AvatarURL(name string) string {
 
 	firstName := strings.Split(name, " ")[0]
 	return "/avatars/" + strings.ToLower(firstName) + ".jpg"
+}
+
+var chartIDPattern = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$`)
+
+// ValidChartID reports whether id is safe to use as an org file name.
+func ValidChartID(id string) bool {
+	return chartIDPattern.MatchString(id)
 }

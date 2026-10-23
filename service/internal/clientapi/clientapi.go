@@ -3,75 +3,32 @@ package clientapi
 import (
 	"context"
 	"fmt"
-	"strconv"
 
 	"connectrpc.com/connect"
-	"github.com/jamesread/golure/pkg/dirs"
 	pb "github.com/jamesread/orgviz/gen/orgviz/clientapi/v1"
 	"github.com/jamesread/orgviz/internal/buildinfo"
-	"github.com/jamesread/orgviz/internal/config"
+	"github.com/jamesread/orgviz/internal/charts"
 	"github.com/jamesread/orgviz/internal/orgs"
-	log "github.com/sirupsen/logrus"
 )
 
+// maxPreviewSourceBytes caps the YAML accepted by PreviewChart.
+const maxPreviewSourceBytes = charts.MaxSourceBytes
+
 type clientAPI struct {
-	cfg      *config.Config
-	orgfiles []*orgs.File
+	store *charts.Store
 }
 
-// NewServer loads organisation files and serves the client API.
-func NewServer(cfg *config.Config) *clientAPI {
-	api := &clientAPI{cfg: cfg}
-	api.orgfiles = loadOrgFiles(cfg)
-	return api
-}
-
-func loadOrgFiles(cfg *config.Config) []*orgs.File {
-	orgDir := findOrgsDir(cfg)
-	log.WithField("dir", orgDir).Info("Reading org files")
-
-	loaded, err := orgs.LoadDir(orgDir)
-	if err != nil {
-		log.WithError(err).Error("Failed to load org files")
-		return []*orgs.File{}
-	}
-
-	return loaded
-}
-
-func findOrgsDir(cfg *config.Config) string {
-	candidates := []string{
-		"../var/config-skel/orgs/",
-		"/config/orgs/",
-		"../examples/",
-	}
-
-	if cfg != nil && cfg.OrgsDir() != "" {
-		candidates = append([]string{cfg.OrgsDir()}, candidates...)
-	}
-
-	orgDir, err := dirs.GetFirstExistingDirectory("orgs", candidates)
-	if err != nil {
-		log.WithError(err).Warn("No orgs directory found")
-		return "not-found"
-	}
-
-	return orgDir
+// NewServer serves the client API from the chart store.
+func NewServer(store *charts.Store) *clientAPI {
+	return &clientAPI{store: store}
 }
 
 func (c *clientAPI) GetClientInitialSettings(ctx context.Context, req *connect.Request[pb.GetClientInitialSettingsRequest]) (*connect.Response[pb.GetClientInitialSettingsResponse], error) {
-	response := &pb.GetClientInitialSettingsResponse{
+	return connect.NewResponse(&pb.GetClientInitialSettingsResponse{
 		Version: buildinfo.Version,
-	}
-
-	for idx, orgfile := range c.orgfiles {
-		response.Charts = append(response.Charts, &pb.ChartInfo{
-			ChartId: strconv.Itoa(idx),
-			Title:   orgfile.Title,
-		})
-	}
-
-	return connect.NewResponse(response), nil
+		Charts:  chartInfos(c.store.List()),
+		Themes:  themeInfos(c.store.ListThemes()),
+	}), nil
 }
 
 func (c *clientAPI) GetChart(ctx context.Context, req *connect.Request[pb.GetChartRequest]) (*connect.Response[pb.GetChartResponse], error) {
@@ -81,21 +38,58 @@ func (c *clientAPI) GetChart(ctx context.Context, req *connect.Request[pb.GetCha
 	}
 
 	response := &pb.GetChartResponse{
-		ChartId: req.Msg.ChartId,
+		ChartId: chart.ID,
 		Title:   chart.Title,
 		People:  chartPeopleToPb(chart.People),
+		Source:  chart.Source,
+		Style:   c.resolvedStyle(chart.Style),
 	}
 
 	return connect.NewResponse(response), nil
 }
 
+// PreviewChart parses unsaved org YAML from the editor pane. Nothing is stored.
+func (c *clientAPI) PreviewChart(ctx context.Context, req *connect.Request[pb.PreviewChartRequest]) (*connect.Response[pb.PreviewChartResponse], error) {
+	if len(req.Msg.Source) > maxPreviewSourceBytes {
+		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("org YAML is larger than %d bytes", maxPreviewSourceBytes))
+	}
+
+	chart, err := orgs.Parse([]byte(req.Msg.Source))
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInvalidArgument, err)
+	}
+
+	response := &pb.PreviewChartResponse{
+		Title:  chart.Title,
+		People: chartPeopleToPb(chart.People),
+		Style:  c.resolvedStyle(chart.Style),
+	}
+
+	return connect.NewResponse(response), nil
+}
+
+func (c *clientAPI) ListThemes(ctx context.Context, req *connect.Request[pb.ListThemesRequest]) (*connect.Response[pb.ListThemesResponse], error) {
+	return connect.NewResponse(&pb.ListThemesResponse{Themes: themeInfos(c.store.ListThemes())}), nil
+}
+
+func (c *clientAPI) SaveTheme(ctx context.Context, req *connect.Request[pb.SaveThemeRequest]) (*connect.Response[pb.SaveThemeResponse], error) {
+	theme, err := c.store.SaveTheme(themeFromRequest(req.Msg))
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInvalidArgument, err)
+	}
+
+	return connect.NewResponse(&pb.SaveThemeResponse{
+		Theme: &pb.ThemeInfo{ThemeId: theme.ID, Title: theme.Title},
+	}), nil
+}
+
 func (c *clientAPI) chartByID(chartID string) (*orgs.File, error) {
-	idx, err := strconv.Atoi(chartID)
-	if err != nil || idx < 0 || idx >= len(c.orgfiles) {
+	chart, found := c.store.Get(chartID)
+	if !found {
 		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("unknown chart %q", chartID))
 	}
 
-	return c.orgfiles[idx], nil
+	return chart, nil
 }
 
 func chartPeopleToPb(people []*orgs.Person) []*pb.Person {
@@ -107,9 +101,75 @@ func chartPeopleToPb(people []*orgs.Person) []*pb.Person {
 			JobTitle:  person.Title,
 			Id:        person.ID,
 			ParentId:  person.ReportsToID,
-			AvatarUrl: orgs.AvatarURL(person.Name),
+			AvatarUrl: person.AvatarURL(),
+			Team:      person.Team,
 		}
 	}
 
 	return pbPeople
+}
+
+func (c *clientAPI) resolvedStyle(style orgs.Style) *pb.ChartStyle {
+	return chartStyleToPb(c.store.ResolveStyle(style))
+}
+
+func chartInfos(files []*orgs.File) []*pb.ChartInfo {
+	infos := make([]*pb.ChartInfo, 0, len(files))
+	for _, chart := range files {
+		infos = append(infos, &pb.ChartInfo{ChartId: chart.ID, Title: chart.Title})
+	}
+
+	return infos
+}
+
+func themeInfos(themes []*orgs.Theme) []*pb.ThemeInfo {
+	infos := make([]*pb.ThemeInfo, 0, len(themes))
+	for _, theme := range themes {
+		infos = append(infos, &pb.ThemeInfo{ThemeId: theme.ID, Title: theme.Title})
+	}
+
+	return infos
+}
+
+func themeFromRequest(req *pb.SaveThemeRequest) *orgs.Theme {
+	theme := &orgs.Theme{ID: req.GetThemeId(), Title: req.GetTitle()}
+	if req.GetStyle() != nil {
+		theme.Style = styleFromPb(req.GetStyle())
+	}
+
+	return theme
+}
+
+func styleFromPb(style *pb.ChartStyle) orgs.Style {
+	return orgs.Style{
+		Theme:           style.GetTheme(),
+		CSS:             style.GetCss(),
+		BackgroundColor: style.GetBackgroundColor(),
+		Features: orgs.StyleFeatures{
+			Avatars:       boolPtr(style.GetShowAvatars()),
+			JobTitles:     boolPtr(style.GetShowJobTitles()),
+			Team:          boolPtr(style.GetShowTeam()),
+			ExpandButtons: boolPtr(style.GetShowExpandButtons()),
+			Compact:       boolPtr(style.GetCompact()),
+		},
+	}
+}
+
+func boolPtr(value bool) *bool {
+	return &value
+}
+
+func chartStyleToPb(style orgs.Style) *pb.ChartStyle {
+	features := style.Features.Resolve()
+
+	return &pb.ChartStyle{
+		Css:               style.CSS,
+		BackgroundColor:   style.BackgroundColor,
+		ShowAvatars:       features.Avatars,
+		ShowJobTitles:     features.JobTitles,
+		ShowTeam:          features.Team,
+		ShowExpandButtons: features.ExpandButtons,
+		Theme:             style.Theme,
+		Compact:           features.Compact,
+	}
 }

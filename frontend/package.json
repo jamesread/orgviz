@@ -16,12 +16,15 @@
     "@bufbuild/protobuf": "^2.14.1",
     "@connectrpc/connect": "^2.1.2",
     "@connectrpc/connect-web": "^2.1.2",
+    "@hugeicons/core-free-icons": "^4.3.5",
+    "@hugeicons/vue": "^1.0.8",
     "d3": "^7.9.0",
     "d3-org-chart": "^3.1.1",
     "femtocrank": "^2.7.1",
     "picocrank": "^1.28.1",
     "vue": "^3.5.22",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
